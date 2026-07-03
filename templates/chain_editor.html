@@ -1,0 +1,47 @@
+{% extends "layout.html" %}
+{% block title %}{{ t('edit_chain') if chain else t('new_chain_title') }} - PromptLab{% endblock %}
+{% block content %}
+
+<div class="flex-between">
+  <h1>{{ t('edit_chain') if chain else t('new_chain_title') }}</h1>
+  {% if campaign %}
+  <a class="btn" href="{{ url_for('campaign_detail', campaign_id=campaign.id) }}">{{ t('back_campaign') }}</a>
+  {% endif %}
+</div>
+
+<form method="post" id="chain-form">
+  <div class="panel">
+    <label>{{ t('col_name') }}</label>
+    <input type="text" name="name" required value="{{ chain.name if chain else '' }}">
+    <label>{{ t('description') }}</label>
+    <textarea name="description">{{ chain.description if chain and chain.description else '' }}</textarea>
+  </div>
+
+  <h2>{{ t('steps') }}</h2>
+  <div class="muted" style="font-size:12px;">{{ t('chain_help') }}</div>
+
+  <div id="steps-list" class="mt"></div>
+  <button type="button" class="btn" id="add-step-btn">{{ t('add_step') }}</button>
+
+  <input type="hidden" name="steps" id="steps-json">
+
+  <div class="mt">
+    <button class="btn btn-accent" type="submit" id="save-chain-btn">{{ t('save') }}</button>
+    {% if chain and campaign %}
+    <button class="btn run-chain-btn" type="button" data-url="{{ url_for('chain_run', chain_id=chain.id) }}">{{ t('test_chain') }}</button>
+    {% endif %}
+  </div>
+  <div id="chain-result" class="muted mt"></div>
+</form>
+
+<script id="payloads-labels" type="application/json">
+  [{% for p in all_payloads %}{"id": {{ p.id }}, "label": {{ (p.technique.value ~ " / " ~ p.name) | tojson }}}{{ "," if not loop.last }}{% endfor %}]
+</script>
+<script id="chain-steps-data" type="application/json">
+  {{ (chain.steps_list() if chain else []) | tojson }}
+</script>
+
+{% endblock %}
+{% block scripts %}
+<script>initChainEditor();</script>
+{% endblock %}

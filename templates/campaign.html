@@ -1,0 +1,145 @@
+{% extends "layout.html" %}
+{% block title %}{{ campaign.name }} - PromptLab{% endblock %}
+{% block content %}
+
+<div class="flex-between">
+  <h1>{{ campaign.name }}</h1>
+  <div>
+    <a class="btn icon-edit" href="{{ url_for('campaign_edit', campaign_id=campaign.id) }}" title="{{ t('edit') }}" aria-label="{{ t('edit') }}">&#9998;</a>
+    <a class="btn" href="{{ url_for('campaign_export_md', campaign_id=campaign.id) }}">Export MD</a>
+    <a class="btn btn-accent" href="{{ url_for('chain_editor', campaign_id=campaign.id) }}">{{ t('new_chain') }}</a>
+  </div>
+</div>
+
+<div class="muted">
+  {{ t('target_label_inline') }} {{ campaign.target.name if campaign.target else t('none_f') }}
+  {% if campaign.target and campaign.target.model_name %} ({{ campaign.target.model_name }}){% endif %}
+  | {{ t('status_label_inline') }} {{ campaign.status.value }}
+</div>
+{% if campaign.description %}<p>{{ campaign.description }}</p>{% endif %}
+
+<div class="stat-grid mt">
+  <div class="stat"><div class="num">{{ stats.total }}</div><div class="lbl">{{ t('stat_runs') }}</div></div>
+  <div class="stat"><div class="num res-success">{{ stats.success }}</div><div class="lbl">{{ t('stat_success') }}</div></div>
+  <div class="stat"><div class="num res-partial">{{ stats.partial }}</div><div class="lbl">{{ t('stat_partial') }}</div></div>
+  <div class="stat"><div class="num res-fail">{{ stats.fail }}</div><div class="lbl">{{ t('stat_fail') }}</div></div>
+  <div class="stat"><div class="num muted">{{ stats.pending }}</div><div class="lbl">{{ t('stat_pending') }}</div></div>
+  <div class="stat"><div class="num res-error">{{ stats.error }}</div><div class="lbl">{{ t('stat_error') }}</div></div>
+  <div class="stat"><div class="num">{{ stats.success_rate }} %</div><div class="lbl">{{ t('stat_rate_judged') }}</div></div>
+</div>
+<div class="muted" style="font-size:12px; margin-top:6px;">
+  {{ t('judged_note').replace('{n}', stats.judged|string) }}
+</div>
+
+<h2>{{ t('quick_send') }}</h2>
+<div class="panel" id="send-panel" data-campaign="{{ campaign.id }}"
+     data-send-url="{{ url_for('campaign_send', campaign_id=campaign.id) }}"
+     data-ph-url="{{ url_for('api_payload_placeholders', payload_id=0) }}">
+  <div class="form-row">
+    <div>
+      <label>Payload</label>
+      <select id="payload-select">
+        <option value="">{{ t('free_text_option') }}</option>
+        {% for p in all_payloads %}
+        <option value="{{ p.id }}">{{ p.technique.value }} / {{ p.name }}</option>
+        {% endfor %}
+      </select>
+    </div>
+  </div>
+
+  <div id="free-prompt-wrap">
+    <label>{{ t('free_prompt') }}</label>
+    <textarea id="free-prompt" placeholder="{{ t('free_prompt_ph') }}"></textarea>
+  </div>
+
+  <div id="placeholders-wrap" class="hidden">
+    <label>{{ t('placeholders') }}</label>
+    <div id="placeholders-fields" class="form-row"></div>
+    <label>{{ t('template_preview') }}</label>
+    <pre class="code" id="template-preview"></pre>
+  </div>
+
+  <div class="mt">
+    <button class="btn btn-accent" id="send-btn">{{ t('send') }}</button>
+    <span class="muted" id="send-status"></span>
+  </div>
+
+  <div id="send-result" class="hidden mt">
+    <label>{{ t('prompt_sent') }}</label>
+    <pre class="code" id="result-prompt"></pre>
+    <label>{{ t('response') }}</label>
+    <pre class="code" id="result-response"></pre>
+    <div class="muted" id="result-meta"></div>
+    <a class="btn btn-sm mt" id="result-link" href="#">{{ t('open_detail') }}</a>
+  </div>
+</div>
+
+{% if chains %}
+<h2>{{ t('chains') }}</h2>
+<table>
+  <thead><tr><th>{{ t('col_name') }}</th><th>{{ t('col_steps') }}</th><th></th></tr></thead>
+  <tbody>
+    {% for ch in chains %}
+    <tr>
+      <td>{{ ch.name }}<div class="muted" style="font-size:12px;">{{ ch.description or '' }}</div></td>
+      <td>{{ ch.steps_list()|length }}</td>
+      <td class="right">
+        <button class="btn btn-sm run-chain-btn" data-url="{{ url_for('chain_run', chain_id=ch.id) }}">{{ t('run') }}</button>
+        <a class="btn btn-sm icon-edit" href="{{ url_for('chain_editor', chain_id=ch.id) }}" title="{{ t('edit') }}" aria-label="{{ t('edit') }}">&#9998;</a>
+        <form class="inline-form" method="post" action="{{ url_for('chain_delete', chain_id=ch.id) }}" onsubmit="return confirm('{{ t('confirm_delete_chain') }}');">
+          <button class="btn btn-sm btn-danger" type="submit" title="{{ t('delete') }}">&times;</button>
+        </form>
+      </td>
+    </tr>
+    {% endfor %}
+  </tbody>
+</table>
+<div id="chain-result" class="muted mt"></div>
+{% endif %}
+
+<h2>{{ t('runs_title') }}</h2>
+<form class="chips mt" method="get" style="margin-bottom:10px;">
+  <a class="btn btn-sm {{ 'btn-accent' if not filter_result }}" href="{{ url_for('campaign_detail', campaign_id=campaign.id) }}">{{ t('all_m') }}</a>
+  <a class="btn btn-sm {{ 'btn-accent' if filter_result == 'pending' }}" href="{{ url_for('campaign_detail', campaign_id=campaign.id, result='pending') }}">{{ t('pending_label') }}</a>
+  {% for r in results %}
+  <a class="btn btn-sm {{ 'btn-accent' if filter_result == r }}" href="{{ url_for('campaign_detail', campaign_id=campaign.id, result=r) }}">{{ r }}</a>
+  {% endfor %}
+</form>
+
+<table>
+  <thead>
+    <tr><th>#</th><th>{{ t('col_result') }}</th><th>{{ t('col_prompt') }}</th><th>{{ t('col_status') }}</th><th>{{ t('col_duration') }}</th><th>{{ t('col_chain') }}</th><th></th></tr>
+  </thead>
+  <tbody>
+    {% for run in runs %}
+    <tr>
+      <td>{{ run.id }}</td>
+      <td>
+        {% set rv = run.result.value if run.result else 'pending' %}
+        <span class="dot dot-{{ rv }}"></span><span class="res-{{ rv }}">{{ t('pending_label') if rv == 'pending' else rv }}</span>
+      </td>
+      <td><div class="muted" style="font-size:12px;">{{ (run.prompt_sent or '')[:70] }}{{ "..." if run.prompt_sent and run.prompt_sent|length > 70 }}</div></td>
+      <td>{{ run.http_status or '-' }}</td>
+      <td>{{ run.duration_ms or '-' }} ms</td>
+      <td>{{ ("step " ~ run.chain_step) if run.chain_id else '-' }}</td>
+      <td class="right">
+        <a class="btn btn-sm" href="{{ url_for('run_detail', run_id=run.id) }}">{{ t('detail') }}</a>
+        <button class="btn btn-sm replay-btn" data-url="{{ url_for('run_replay', run_id=run.id) }}">{{ t('replay') }}</button>
+      </td>
+    </tr>
+    {% else %}
+    <tr><td colspan="7" class="muted">{{ t('no_runs') }}</td></tr>
+    {% endfor %}
+  </tbody>
+</table>
+
+<div class="mt">
+  <form class="inline-form" method="post" action="{{ url_for('campaign_delete', campaign_id=campaign.id) }}" onsubmit="return confirm('{{ t('confirm_delete_campaign') }}');">
+    <button class="btn btn-danger" type="submit">{{ t('delete_campaign') }}</button>
+  </form>
+</div>
+
+{% endblock %}
+{% block scripts %}
+<script>window.PROMPTLAB = window.PROMPTLAB || {}; initCampaignPage();</script>
+{% endblock %}

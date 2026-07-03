@@ -1,0 +1,88 @@
+{% extends "layout.html" %}
+{% block title %}{{ t('edit_target') if target else t('new_target_title') }} - PromptLab{% endblock %}
+{% block content %}
+
+<h1>{{ t('edit_target') if target else t('new_target_title') }}</h1>
+
+<form class="panel" method="post">
+  <label>{{ t('col_name') }}</label>
+  <input type="text" name="name" required value="{{ target.name if target else '' }}">
+
+  <div class="form-row">
+    <div>
+      <label>{{ t('col_type') }}</label>
+      <select name="type">
+        {% for tv in target_types %}
+        <option value="{{ tv }}" {{ "selected" if target and target.type.value == tv }}>{{ tv }}</option>
+        {% endfor %}
+      </select>
+    </div>
+    <div>
+      <label>{{ t('model') }}</label>
+      <input type="text" name="model_name" value="{{ target.model_name if target and target.model_name else '' }}">
+    </div>
+  </div>
+
+  <label>{{ t('endpoint_url') }}</label>
+  <input type="url" name="endpoint_url" value="{{ target.endpoint_url if target and target.endpoint_url else '' }}">
+
+  <label>{{ t('connector_preset_label') }}</label>
+  <div class="form-row" style="align-items:flex-end;">
+    <div>
+      <select id="connector-preset">
+        <option value="">{{ t('choose_preset') }}</option>
+        <option value="openai">{{ t('preset_openai') }}</option>
+        <option value="anthropic">{{ t('preset_anthropic') }}</option>
+        <option value="htb_chat">{{ t('preset_htb_chat') }}</option>
+        <option value="htb_simple">{{ t('preset_htb_simple') }}</option>
+        <option value="raw_http">{{ t('preset_raw_http') }}</option>
+      </select>
+    </div>
+    <div style="flex:0;">
+      <button type="button" class="btn" id="apply-preset">{{ t('insert_preset') }}</button>
+    </div>
+  </div>
+
+  <label>{{ t('authconfig_label') }}</label>
+  <textarea id="auth_config" name="auth_config" style="min-height:180px;" placeholder='{"connector": "openai", "base_url": "http://localhost:11434/v1", "api_key": "", "model": "llama3"}'>{{ target.auth_config if target and target.auth_config else '' }}</textarea>
+  <div class="muted" style="font-size:12px;">{{ t('authconfig_hint') }}</div>
+
+  <label>{{ t('notes') }}</label>
+  <textarea name="notes">{{ target.notes if target and target.notes else '' }}</textarea>
+
+  <div class="mt">
+    <button class="btn btn-accent" type="submit">{{ t('save') }}</button>
+    <a class="btn" href="{{ url_for('dashboard') }}">{{ t('cancel') }}</a>
+    {% if target %}
+    <form class="inline-form" method="post" action="{{ url_for('target_delete', target_id=target.id) }}" onsubmit="return confirm('{{ t('confirm_delete_target') }}');">
+      <button class="btn btn-danger" type="submit">{{ t('delete') }}</button>
+    </form>
+    {% endif %}
+  </div>
+</form>
+
+{% if targets %}
+<h2>{{ t('existing_targets') }}</h2>
+<table>
+  <thead><tr><th>{{ t('col_name') }}</th><th>{{ t('col_type') }}</th><th>{{ t('model') }}</th><th>Endpoint</th><th></th></tr></thead>
+  <tbody>
+    {% for tg in targets %}
+    <tr>
+      <td>{{ tg.name }}</td>
+      <td>{{ tg.type.value }}</td>
+      <td class="muted">{{ tg.model_name or '-' }}</td>
+      <td class="muted">{{ tg.endpoint_url or '-' }}</td>
+      <td class="right">
+        <a class="btn btn-sm" href="{{ url_for('target_fingerprint', target_id=tg.id) }}">{{ t('fingerprint') }}</a>
+        <a class="btn btn-sm icon-edit" href="{{ url_for('target_form', target_id=tg.id) }}" title="{{ t('edit') }}" aria-label="{{ t('edit') }}">&#9998;</a>
+      </td>
+    </tr>
+    {% endfor %}
+  </tbody>
+</table>
+{% endif %}
+
+{% endblock %}
+{% block scripts %}
+<script>initTargetForm();</script>
+{% endblock %}

@@ -1,0 +1,51 @@
+{% extends "layout.html" %}
+{% block title %}Run #{{ run.id }} - PromptLab{% endblock %}
+{% block content %}
+
+<div class="flex-between">
+  <h1>Run #{{ run.id }}</h1>
+  <a class="btn" href="{{ url_for('campaign_detail', campaign_id=run.campaign_id) }}">{{ t('back_campaign') }}</a>
+</div>
+
+<div class="muted">
+  {% if payload %}
+  {{ t('technique_label') }} <span class="badge badge-technique">{{ payload.technique.value }}</span>
+  {{ t('objective_label') }} <span class="badge badge-objective">{{ payload.objective.value }}</span>
+  {{ t('payload_label') }} {{ payload.name }}
+  {% else %}
+  {{ t('free_prompt_no_payload') }}
+  {% endif %}
+  {% if run.chain_id %} | {{ t('col_chain') }}, step {{ run.chain_step }}{% endif %}
+  | {{ run.http_status or '-' }} | {{ run.duration_ms or '-' }} ms
+</div>
+
+<h2>{{ t('prompt_sent') }}</h2>
+<pre class="code">{{ run.prompt_sent or '' }}</pre>
+
+<h2>{{ t('raw_response') }}</h2>
+<pre class="code">{{ run.raw_response or '' }}</pre>
+
+<h2>{{ t('classification') }}</h2>
+<form class="panel" method="post" action="{{ url_for('run_classify', run_id=run.id) }}">
+  <label>{{ t('result') }}</label>
+  <select name="result">
+    <option value="pending" {{ "selected" if not run.result }}>{{ t('pending_label') }}</option>
+    {% for r in results %}
+    <option value="{{ r }}" {{ "selected" if run.result and run.result.value == r }}>{{ r }}</option>
+    {% endfor %}
+  </select>
+  <label>{{ t('notes') }}</label>
+  <textarea name="notes">{{ run.notes if run.notes else '' }}</textarea>
+  <div class="mt">
+    <button class="btn btn-accent" type="submit">{{ t('save') }}</button>
+    <button class="btn replay-btn" type="button" data-url="{{ url_for('run_replay', run_id=run.id) }}">{{ t('replay') }}</button>
+    <form class="inline-form" method="post" action="{{ url_for('run_delete', run_id=run.id) }}" onsubmit="return confirm('{{ t('confirm_delete_run') }}');">
+      <button class="btn btn-danger" type="submit">{{ t('delete') }}</button>
+    </form>
+  </div>
+</form>
+
+{% endblock %}
+{% block scripts %}
+<script>bindReplayButtons();</script>
+{% endblock %}

@@ -1,0 +1,84 @@
+{% extends "layout.html" %}
+{% block title %}{{ t('payload_library_title') }} - PromptLab{% endblock %}
+{% block content %}
+
+<div class="flex-between">
+  <h1>{{ t('payload_library_title') }}</h1>
+  <div>
+    <a class="btn btn-accent" href="{{ url_for('payload_form') }}">{{ t('new_payload') }}</a>
+    <a class="btn" href="{{ url_for('payloads_export') }}">{{ t('export_json') }}</a>
+  </div>
+</div>
+
+<form class="panel" method="get" action="{{ url_for('payloads') }}">
+  <div class="form-row">
+    <div>
+      <label>{{ t('col_technique') }}</label>
+      <select name="technique" onchange="this.form.submit()">
+        <option value="">{{ t('all_f') }}</option>
+        {% for tv in techniques %}
+        <option value="{{ tv }}" {{ "selected" if filter_technique == tv }}>{{ tv }}</option>
+        {% endfor %}
+      </select>
+    </div>
+    <div>
+      <label>{{ t('col_objective') }}</label>
+      <select name="objective" onchange="this.form.submit()">
+        <option value="">{{ t('all_m2') }}</option>
+        {% for o in objectives %}
+        <option value="{{ o }}" {{ "selected" if filter_objective == o }}>{{ o }}</option>
+        {% endfor %}
+      </select>
+    </div>
+    <div>
+      <label>{{ t('col_type') }}</label>
+      <select name="injection_type" onchange="this.form.submit()">
+        <option value="">{{ t('all_m2') }}</option>
+        {% for i in injection_types %}
+        <option value="{{ i }}" {{ "selected" if filter_injection == i }}>{{ i }}</option>
+        {% endfor %}
+      </select>
+    </div>
+    <div style="align-self: flex-end;">
+      {% if filter_technique or filter_objective or filter_injection %}
+      <a class="btn" href="{{ url_for('payloads') }}">{{ t('reset') }}</a>
+      {% endif %}
+      <noscript><button class="btn" type="submit">{{ t('filter') }}</button></noscript>
+    </div>
+  </div>
+</form>
+
+<table>
+  <thead>
+    <tr><th>{{ t('col_name') }}</th><th>{{ t('col_technique') }}</th><th>{{ t('col_objective') }}</th><th>{{ t('col_type') }}</th><th></th></tr>
+  </thead>
+  <tbody>
+    {% for p in payloads %}
+    <tr>
+      <td>{{ p.name }}<div class="muted" style="font-size:12px;">{{ p.content[:80] }}{{ "..." if p.content|length > 80 }}</div></td>
+      <td><span class="badge badge-technique">{{ p.technique.value }}</span></td>
+      <td><span class="badge badge-objective">{{ p.objective.value }}</span></td>
+      <td>{{ p.injection_type.value }}</td>
+      <td class="right">
+        <a class="btn btn-sm icon-edit" href="{{ url_for('payload_form', payload_id=p.id) }}" title="{{ t('edit') }}" aria-label="{{ t('edit') }}">&#9998;</a>
+        <form class="inline-form" method="post" action="{{ url_for('payload_delete', payload_id=p.id) }}" onsubmit="return confirm('{{ t('confirm_delete_payload') }}');">
+          <button class="btn btn-sm btn-danger" type="submit" title="{{ t('delete') }}">&times;</button>
+        </form>
+      </td>
+    </tr>
+    {% else %}
+    <tr><td colspan="5" class="muted">{{ t('no_payload') }}</td></tr>
+    {% endfor %}
+  </tbody>
+</table>
+
+<h2>{{ t('import_payloads') }}</h2>
+<form class="panel" method="post" action="{{ url_for('payloads_import') }}" enctype="multipart/form-data">
+  <label>{{ t('paste_json') }}</label>
+  <textarea name="data" placeholder='[{"name": "...", "content": "...", "technique": "override", "objective": "bypass_refusal"}]'></textarea>
+  <label>{{ t('or_choose_file') }}</label>
+  <input type="file" name="file" accept="application/json">
+  <div class="mt"><button class="btn" type="submit">{{ t('import') }}</button></div>
+</form>
+
+{% endblock %}

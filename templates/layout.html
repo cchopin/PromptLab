@@ -1,0 +1,43 @@
+<!doctype html>
+<html lang="{{ lang }}">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>{% block title %}PromptLab{% endblock %}</title>
+  <link rel="icon" type="image/svg+xml" href="{{ url_for('static', filename='favicon.svg') }}">
+  <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+</head>
+<body>
+  <header class="topbar">
+    <a class="brand" href="{{ url_for('dashboard') }}">Prompt<span>Lab</span></a>
+    <nav>
+      <a href="{{ url_for('dashboard') }}">{{ t('nav_dashboard') }}</a>
+      <a href="{{ url_for('payloads') }}">{{ t('nav_payloads') }}</a>
+      <a href="{{ url_for('techniques') }}">{{ t('nav_techniques') }}</a>
+      <a href="{{ url_for('diff_view') }}">{{ t('nav_diff') }}</a>
+      <a href="{{ url_for('campaign_new') }}">{{ t('nav_new_campaign') }}</a>
+      <a href="{{ url_for('target_form') }}">{{ t('nav_new_target') }}</a>
+    </nav>
+    <div class="lang-switch">
+      <a href="{{ url_for('set_lang', code='fr') }}" class="{{ 'active' if lang == 'fr' }}">FR</a>
+      <span>/</span>
+      <a href="{{ url_for('set_lang', code='en') }}" class="{{ 'active' if lang == 'en' }}">EN</a>
+    </div>
+  </header>
+
+  <main class="container">
+    {% block content %}{% endblock %}
+  </main>
+
+  <footer class="footer">
+    {{ t('footer') }}
+  </footer>
+
+  <script>
+    window.LANG = {{ lang | tojson }};
+    window.I18N = {{ js_i18n | tojson }};
+  </script>
+  <script src="{{ url_for('static', filename='app.js') }}"></script>
+  {% block scripts %}{% endblock %}
+</body>
+</html>

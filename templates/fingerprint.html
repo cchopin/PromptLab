@@ -1,0 +1,52 @@
+{% extends "layout.html" %}
+{% block title %}{{ t('fingerprint_title') }} - PromptLab{% endblock %}
+{% block content %}
+
+<div class="flex-between">
+  <h1>{{ t('fingerprint_title') }} : {{ target.name }}</h1>
+  <a class="btn" href="{{ url_for('target_form', target_id=target.id) }}">{{ t('edit') }}</a>
+</div>
+<p class="muted">{{ t('fingerprint_intro') }}</p>
+
+{% if not result %}
+<div class="panel">
+  <a class="btn btn-accent" href="{{ url_for('target_fingerprint', target_id=target.id, run=1) }}">{{ t('run_fingerprint') }}</a>
+</div>
+{% else %}
+<div class="panel">
+  <div class="tech-lbl">{{ t('hypothesis') }}</div>
+  <div style="font-size:16px; color:var(--accent);">{{ result.hypothesis }}</div>
+  {% if result.hypotheses %}
+  <table class="mt">
+    <thead><tr><th>{{ t('hypothesis') }}</th><th>Score</th><th>Confiance</th></tr></thead>
+    <tbody>
+      {% for h in result.hypotheses %}
+      <tr>
+        <td>{{ h.family }}</td>
+        <td class="muted">{{ h.weight }}</td>
+        <td>
+          {{ h.confidence }} %
+          <div class="bar"><span style="width: {{ h.confidence }}%"></span></div>
+        </td>
+      </tr>
+      {% endfor %}
+    </tbody>
+  </table>
+  {% endif %}
+</div>
+
+<h2>{{ t('probes') }}</h2>
+{% for pr in result.probes %}
+<div class="panel">
+  <div class="muted" style="font-size:12px;">{{ pr.prompt }}
+    {% if pr.matched %}| <span class="res-success">{{ pr.matched|join(', ') }}</span>{% endif %}
+    | {{ pr.status or '-' }}
+  </div>
+  <pre class="code">{{ pr.reply }}</pre>
+</div>
+{% endfor %}
+
+<a class="btn" href="{{ url_for('target_fingerprint', target_id=target.id, run=1) }}">{{ t('run_fingerprint') }}</a>
+{% endif %}
+
+{% endblock %}

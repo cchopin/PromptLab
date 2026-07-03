@@ -1,0 +1,53 @@
+{% extends "layout.html" %}
+{% block title %}{{ t('edit_payload') if payload else t('new_payload_title') }} - PromptLab{% endblock %}
+{% block content %}
+
+<h1>{{ t('edit_payload') if payload else t('new_payload_title') }}</h1>
+
+<form class="panel" method="post">
+  <label>{{ t('col_name') }}</label>
+  <input type="text" name="name" required value="{{ payload.name if payload else '' }}">
+
+  <div class="form-row">
+    <div>
+      <label>{{ t('col_technique') }}</label>
+      <select name="technique" required>
+        {% for tv in techniques %}
+        <option value="{{ tv }}" {{ "selected" if payload and payload.technique.value == tv }}>{{ tv }}</option>
+        {% endfor %}
+      </select>
+    </div>
+    <div>
+      <label>{{ t('col_objective') }}</label>
+      <select name="objective" required>
+        {% for o in objectives %}
+        <option value="{{ o }}" {{ "selected" if payload and payload.objective.value == o }}>{{ o }}</option>
+        {% endfor %}
+      </select>
+    </div>
+    <div>
+      <label>{{ t('injection_type') }}</label>
+      <select name="injection_type">
+        {% for i in injection_types %}
+        <option value="{{ i }}" {{ "selected" if payload and payload.injection_type.value == i }}>{{ i }}</option>
+        {% endfor %}
+      </select>
+    </div>
+  </div>
+
+  <label>{{ t('content_label') }}</label>
+  <textarea name="content" required style="min-height:160px;">{{ payload.content if payload else '' }}</textarea>
+
+  <label>{{ t('tags_label') }}</label>
+  <input type="text" name="tags" value="{{ payload.tags_list()|join(', ') if payload else '' }}">
+
+  <label>{{ t('notes') }}</label>
+  <textarea name="notes">{{ payload.notes if payload and payload.notes else '' }}</textarea>
+
+  <div class="mt">
+    <button class="btn btn-accent" type="submit">{{ t('save') }}</button>
+    <a class="btn" href="{{ url_for('payloads') }}">{{ t('cancel') }}</a>
+  </div>
+</form>
+
+{% endblock %}

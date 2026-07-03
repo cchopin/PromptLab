@@ -1,0 +1,39 @@
+{% extends "layout.html" %}
+{% block title %}{{ t('techniques_title') }} - PromptLab{% endblock %}
+{% block content %}
+
+<h1>{{ t('techniques_title') }}</h1>
+<p class="muted">{{ t('techniques_intro') }}</p>
+
+{% if resources %}
+<div class="panel">
+  <strong>{{ t('resources') }}</strong>
+  <div class="chips mt">
+    {% for label, url in resources %}
+    <a class="btn btn-sm" href="{{ url }}" target="_blank" rel="noopener noreferrer">{{ label }}</a>
+    {% endfor %}
+  </div>
+</div>
+{% endif %}
+
+<div class="tech-grid">
+  {% for d in docs %}
+  <div class="panel tech-card">
+    <div class="flex-between">
+      <h3>{{ d.titre }}</h3>
+      <span class="badge badge-technique">{{ d.code }}</span>
+    </div>
+    <div class="tech-field"><span class="tech-lbl">{{ t('principle') }}</span> {{ d.principe }}</div>
+    <div class="tech-field"><span class="tech-lbl">{{ t('objective_word') }}</span> {{ d.objectif }}</div>
+    <div class="tech-field"><span class="tech-lbl">{{ t('defense') }}</span> {{ d.defense }}</div>
+    <div class="mt">
+      <a class="btn btn-sm" href="{{ url_for('payloads', technique=d.code) }}">{{ t('see_payloads') }}</a>
+      {% if d.ref %}
+      <a class="btn btn-sm" href="{{ d.ref }}" target="_blank" rel="noopener noreferrer">{{ t('reference') }}</a>
+      {% endif %}
+    </div>
+  </div>
+  {% endfor %}
+</div>
+
+{% endblock %}

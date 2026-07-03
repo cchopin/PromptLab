@@ -1,0 +1,8 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64" width="64" height="64">
+  <rect width="64" height="64" rx="12" fill="#16213a"/>
+  <rect x="3" y="3" width="58" height="58" rx="10" fill="none" stroke="#0f3460" stroke-width="2"/>
+  <!-- invite terminal ">" en couleur accent -->
+  <path d="M16 20 L30 32 L16 44" fill="none" stroke="#e94560" stroke-width="6" stroke-linecap="round" stroke-linejoin="round"/>
+  <!-- curseur "_" -->
+  <rect x="34" y="40" width="16" height="5" rx="2" fill="#e0e0e0"/>
+</svg>

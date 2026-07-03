@@ -1,0 +1,71 @@
+{% extends "layout.html" %}
+{% block title %}{{ t('diff_title') }} - PromptLab{% endblock %}
+{% block content %}
+
+<h1>{{ t('diff_title') }}</h1>
+<p class="muted">{{ t('diff_intro') }}</p>
+
+<div class="panel" id="diff-panel" data-run-url="{{ url_for('diff_run') }}"
+     data-ph-url="{{ url_for('api_payload_placeholders', payload_id=0) }}">
+  <div class="form-row">
+    <div>
+      <label>{{ t('target_a') }}</label>
+      <select id="target-a">
+        {% for tg in targets %}
+        <option value="{{ tg.id }}">{{ tg.name }}</option>
+        {% endfor %}
+      </select>
+    </div>
+    <div>
+      <label>{{ t('target_b') }}</label>
+      <select id="target-b">
+        {% for tg in targets %}
+        <option value="{{ tg.id }}" {{ "selected" if loop.index == 2 }}>{{ tg.name }}</option>
+        {% endfor %}
+      </select>
+    </div>
+  </div>
+
+  <label>Payload</label>
+  <select id="payload-select">
+    <option value="">{{ t('free_text_option') }}</option>
+    {% for p in all_payloads %}
+    <option value="{{ p.id }}">{{ p.technique.value }} / {{ p.name }}</option>
+    {% endfor %}
+  </select>
+
+  <div id="free-prompt-wrap">
+    <label>{{ t('free_prompt') }}</label>
+    <textarea id="free-prompt" placeholder="{{ t('free_prompt_ph') }}"></textarea>
+  </div>
+
+  <div id="placeholders-wrap" class="hidden">
+    <label>{{ t('placeholders') }}</label>
+    <div id="placeholders-fields" class="form-row"></div>
+  </div>
+
+  <div class="mt">
+    <button class="btn btn-accent" id="compare-btn">{{ t('compare') }}</button>
+    <span class="muted" id="diff-status"></span>
+  </div>
+</div>
+
+<div id="diff-results" class="form-row hidden">
+  <div style="flex:1; min-width:300px;">
+    <label id="res-a-label">{{ t('target_a') }}</label>
+    <pre class="code" id="res-a"></pre>
+  </div>
+  <div style="flex:1; min-width:300px;">
+    <label id="res-b-label">{{ t('target_b') }}</label>
+    <pre class="code" id="res-b"></pre>
+  </div>
+</div>
+
+{% if not targets %}
+<div class="panel muted">{{ t('no_target_pre') }} <a href="{{ url_for('target_form') }}">{{ t('create_target_link') }}</a> {{ t('no_target_post') }}</div>
+{% endif %}
+
+{% endblock %}
+{% block scripts %}
+<script>initDiffPage();</script>
+{% endblock %}

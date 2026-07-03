@@ -1,0 +1,78 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1000 560" font-family="SFMono-Regular, Consolas, Menlo, monospace">
+  <rect width="1000" height="560" fill="#1a1a2e"/>
+  <!-- topbar -->
+  <rect width="1000" height="44" fill="#16213a"/>
+  <line x1="0" y1="44" x2="1000" y2="44" stroke="#26355c"/>
+  <text x="24" y="28" font-size="16" font-weight="bold" fill="#e0e0e0">Prompt<tspan fill="#e94560">Lab</tspan></text>
+  <text x="130" y="28" font-size="12" fill="#8a94b8">Dashboard</text>
+  <text x="210" y="28" font-size="12" fill="#8a94b8">Payloads</text>
+  <text x="285" y="28" font-size="12" font-weight="bold" fill="#e0e0e0">Techniques</text>
+  <text x="925" y="28" font-size="12" fill="#8a94b8">FR /</text>
+  <text x="960" y="28" font-size="12" font-weight="bold" fill="#e94560">EN</text>
+
+  <text x="40" y="84" font-size="21" font-weight="bold" fill="#e0e0e0">Injection techniques</text>
+  <text x="40" y="104" font-size="11" fill="#8a94b8">Reference of the techniques covered by PromptLab: principle, typical objective and a defense hint.</text>
+
+  <!-- resources panel -->
+  <rect x="40" y="116" width="920" height="52" rx="6" fill="#16213a" stroke="#26355c"/>
+  <text x="56" y="138" font-size="12" font-weight="600" fill="#e0e0e0">External resources</text>
+  <g font-size="10" fill="#e0e0e0">
+    <rect x="56" y="146" width="150" height="16" rx="3" fill="#0f3460" stroke="#26355c"/><text x="131" y="158" text-anchor="middle">OWASP LLM01</text>
+    <rect x="214" y="146" width="200" height="16" rx="3" fill="#0f3460" stroke="#26355c"/><text x="314" y="158" text-anchor="middle">OWASP Prevention Cheat Sheet</text>
+    <rect x="422" y="146" width="170" height="16" rx="3" fill="#0f3460" stroke="#26355c"/><text x="507" y="158" text-anchor="middle">PortSwigger Web LLM attacks</text>
+    <rect x="600" y="146" width="150" height="16" rx="3" fill="#0f3460" stroke="#26355c"/><text x="675" y="158" text-anchor="middle">PayloadsAllTheThings</text>
+    <rect x="758" y="146" width="100" height="16" rx="3" fill="#0f3460" stroke="#26355c"/><text x="808" y="158" text-anchor="middle">HackTricks AI</text>
+  </g>
+
+  <!-- technique cards -->
+  <g>
+    <!-- card 1 -->
+    <rect x="40" y="184" width="450" height="160" rx="6" fill="#16213a" stroke="#26355c"/>
+    <text x="56" y="210" font-size="13" font-weight="600" fill="#e0e0e0">Override (instruction overwrite)</text>
+    <rect x="400" y="196" width="74" height="18" rx="3" fill="#1d2f5a"/><text x="437" y="209" font-size="10" fill="#e0e0e0" text-anchor="middle">override</text>
+    <text x="56" y="234" font-size="9" fill="#8a94b8">PRINCIPLE</text>
+    <text x="56" y="248" font-size="10" fill="#e0e0e0">Ask the model to ignore previous instructions to impose a new one.</text>
+    <text x="56" y="270" font-size="9" fill="#8a94b8">OBJECTIVE</text>
+    <text x="56" y="284" font-size="10" fill="#e0e0e0">Bypass the system prompt rules.</text>
+    <text x="56" y="306" font-size="9" fill="#8a94b8">DEFENSE</text>
+    <text x="56" y="320" font-size="10" fill="#e0e0e0">Separate instructions from data; never trust user input as a directive.</text>
+    <rect x="56" y="326" width="90" height="0"/>
+  </g>
+
+  <!-- card 2 -->
+  <rect x="510" y="184" width="450" height="160" rx="6" fill="#16213a" stroke="#26355c"/>
+  <text x="526" y="210" font-size="13" font-weight="600" fill="#e0e0e0">Jailbreak (unrestricted modes)</text>
+  <rect x="884" y="196" width="60" height="18" rx="3" fill="#1d2f5a"/><text x="914" y="209" font-size="10" fill="#e0e0e0" text-anchor="middle">jailbreak</text>
+  <text x="526" y="234" font-size="9" fill="#8a94b8">PRINCIPLE</text>
+  <text x="526" y="248" font-size="10" fill="#e0e0e0">Adopt an unrestricted persona (DAN, developer mode, AIM).</text>
+  <text x="526" y="270" font-size="9" fill="#8a94b8">OBJECTIVE</text>
+  <text x="526" y="284" font-size="10" fill="#e0e0e0">Fully unlock the model.</text>
+  <text x="526" y="306" font-size="9" fill="#8a94b8">DEFENSE</text>
+  <text x="526" y="320" font-size="10" fill="#e0e0e0">Anti-jailbreak training; detect known personas; persistent refusal.</text>
+
+  <!-- card 3 -->
+  <rect x="40" y="356" width="450" height="160" rx="6" fill="#16213a" stroke="#26355c"/>
+  <text x="56" y="382" font-size="13" font-weight="600" fill="#e0e0e0">Leak (system prompt leak)</text>
+  <rect x="440" y="368" width="34" height="18" rx="3" fill="#1d2f5a"/><text x="457" y="381" font-size="10" fill="#e0e0e0" text-anchor="middle">leak</text>
+  <text x="56" y="406" font-size="9" fill="#8a94b8">PRINCIPLE</text>
+  <text x="56" y="420" font-size="10" fill="#e0e0e0">Get the model to reveal its system prompt or hidden instructions.</text>
+  <text x="56" y="442" font-size="9" fill="#8a94b8">OBJECTIVE</text>
+  <text x="56" y="456" font-size="10" fill="#e0e0e0">Recover the confidential instructions.</text>
+  <text x="56" y="478" font-size="9" fill="#8a94b8">DEFENSE</text>
+  <text x="56" y="492" font-size="10" fill="#e0e0e0">No secrets in the system prompt; filter responses that copy it.</text>
+  <rect x="56" y="498" width="90" height="16" rx="3" fill="#0f3460" stroke="#26355c"/><text x="101" y="510" font-size="9" fill="#e0e0e0" text-anchor="middle">See payloads</text>
+  <rect x="152" y="498" width="76" height="16" rx="3" fill="#0f3460" stroke="#26355c"/><text x="190" y="510" font-size="9" fill="#e0e0e0" text-anchor="middle">Reference</text>
+
+  <!-- card 4 -->
+  <rect x="510" y="356" width="450" height="160" rx="6" fill="#16213a" stroke="#26355c"/>
+  <text x="526" y="382" font-size="13" font-weight="600" fill="#e0e0e0">Indirect HTML</text>
+  <rect x="856" y="368" width="88" height="18" rx="3" fill="#1d2f5a"/><text x="900" y="381" font-size="10" fill="#e0e0e0" text-anchor="middle">indirect_html</text>
+  <text x="526" y="406" font-size="9" fill="#8a94b8">PRINCIPLE</text>
+  <text x="526" y="420" font-size="10" fill="#e0e0e0">Hide instructions in HTML (comments, hidden divs) the agent reads.</text>
+  <text x="526" y="442" font-size="9" fill="#8a94b8">OBJECTIVE</text>
+  <text x="526" y="456" font-size="10" fill="#e0e0e0">Inject a directive via third-party content.</text>
+  <text x="526" y="478" font-size="9" fill="#8a94b8">DEFENSE</text>
+  <text x="526" y="492" font-size="10" fill="#e0e0e0">Treat external content as untrusted; never run it as instruction.</text>
+  <rect x="526" y="498" width="90" height="16" rx="3" fill="#0f3460" stroke="#26355c"/><text x="571" y="510" font-size="9" fill="#e0e0e0" text-anchor="middle">See payloads</text>
+  <rect x="622" y="498" width="76" height="16" rx="3" fill="#0f3460" stroke="#26355c"/><text x="660" y="510" font-size="9" fill="#e0e0e0" text-anchor="middle">Reference</text>
+</svg>

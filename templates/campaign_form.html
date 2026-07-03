@@ -1,0 +1,46 @@
+{% extends "layout.html" %}
+{% block title %}{{ t('edit_campaign') if campaign else t('new_campaign_title') }} - PromptLab{% endblock %}
+{% block content %}
+
+<h1>{{ t('edit_campaign') if campaign else t('new_campaign_title') }}</h1>
+
+<form class="panel" method="post">
+  <label>{{ t('col_name') }}</label>
+  <input type="text" name="name" required value="{{ campaign.name if campaign else '' }}">
+
+  <div class="form-row">
+    <div>
+      <label>{{ t('target') }}</label>
+      <select name="target_id">
+        <option value="">{{ t('none_f') }}</option>
+        {% for tg in targets %}
+        <option value="{{ tg.id }}" {{ "selected" if campaign and campaign.target_id == tg.id }}>{{ tg.name }}</option>
+        {% endfor %}
+      </select>
+    </div>
+    {% if campaign %}
+    <div>
+      <label>{{ t('status') }}</label>
+      <select name="status">
+        {% for s in ["active", "closed"] %}
+        <option value="{{ s }}" {{ "selected" if campaign.status.value == s }}>{{ s }}</option>
+        {% endfor %}
+      </select>
+    </div>
+    {% endif %}
+  </div>
+
+  <label>{{ t('description') }}</label>
+  <textarea name="description">{{ campaign.description if campaign and campaign.description else '' }}</textarea>
+
+  <div class="mt">
+    <button class="btn btn-accent" type="submit">{{ t('save') }}</button>
+    <a class="btn" href="{{ url_for('dashboard') }}">{{ t('cancel') }}</a>
+  </div>
+</form>
+
+{% if not targets %}
+<div class="panel muted">{{ t('no_target_pre') }} <a href="{{ url_for('target_form') }}">{{ t('create_target_link') }}</a> {{ t('no_target_post') }}</div>
+{% endif %}
+
+{% endblock %}
