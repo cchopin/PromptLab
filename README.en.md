@@ -38,13 +38,17 @@ bar (the choice is stored in a cookie).
 
 ## Preview
 
-![Dashboard](docs/img/dashboard.svg)
+![Dashboard](docs/img/dashboard.png)
+
+![Payload library](docs/img/payloads.png)
+
+![Techniques page](docs/img/techniques.png)
+
+![Targets list](docs/img/targets.png)
+
+![Diff mode](docs/img/diff.png)
 
 ![Campaign detail](docs/img/campaign.svg)
-
-![Techniques page](docs/img/techniques.svg)
-
-![Payload library](docs/img/payloads.svg)
 
 ## Overview
 
@@ -105,6 +109,11 @@ random pause in that range is applied, spacing out requests and avoiding HTTP
 429 errors. The HTB and raw connector presets default to `[5, 10]`. This
 throttle also applies to chains, diff mode and fingerprint.
 
+Not to be confused with `poll_delay_ms`: the throttle (seconds) is the pause
+before each send for rate limiting, whereas `poll_delay_ms` (milliseconds) is
+the wait between two polling checks while waiting for the bot's reply. They are
+two independent settings.
+
 Async chat mode (POST then polling), for chats where the POST only acknowledges
 receipt and the reply arrives in a second URL read via GET (TrynaSob style):
 
@@ -116,6 +125,7 @@ receipt and the reply arrives in a second URL read via GET (TrynaSob style):
   "poll_url": "http://TARGET:PORT/api/messages",
   "poll_retries": 8,
   "poll_delay_ms": 1000,
+  "throttle": [5, 10],
   "messages_path": "$",
   "sender_field": "sender",
   "bot_value": "Bot",
@@ -228,8 +238,9 @@ two models or two configurations behave against the same attack.
 
 ## Fingerprint
 
-From the targets list, the Fingerprint button runs a probe inspired by the
-LLMmap methodology. Several self-identification prompts are sent, then the clues
+The Fingerprint button is in the Targets menu (top bar), on each target in the
+list, and as a shortcut on a campaign page next to its target. It runs a probe
+inspired by the LLMmap methodology. Several self-identification prompts are sent, then the clues
 found in the responses are scored with weighted signatures to propose ranked
 model hypotheses with a confidence percentage (OpenAI, Anthropic, Meta, Google,
 Mistral, Cohere).

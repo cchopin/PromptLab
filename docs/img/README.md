@@ -1,13 +1,13 @@
 # Visuels / Visuals
 
-Maquettes SVG au theme de l'app, referencees par le README :
+Captures reelles (PNG) referencees par le README :
 
-- `dashboard.svg` : page d'accueil, campagne et taux de succes par technique.
-- `campaign.svg` : detail d'une campagne (stats, Quick send, runs classes).
-- `techniques.svg` : page Techniques (ressources + fiches).
-- `payloads.svg` : bibliotheque de payloads (filtres, badges, actions).
+- `dashboard.png` : page d'accueil, campagne et taux de succes par technique.
+- `payloads.png` : bibliotheque de payloads (filtres, badges, actions).
+- `techniques.png` : page Techniques (ressources + fiches).
+- `targets.png` : liste des cibles.
+- `diff.png` : mode diff (comparaison de deux cibles).
 
-Ce sont des apercus SVG (illustrations fideles au theme), pas des captures
-brutes. Pour remplacer par de vraies captures, exporte en PNG depuis l'app en
-cours d'execution et garde les memes noms de fichier (en ajustant l'extension
-dans le README si besoin).
+Pour le detail d'une campagne, la maquette `campaign.svg` sert d'apercu en
+attendant une vraie capture. Les autres fichiers `.svg` restent disponibles
+comme fallback vectoriel.

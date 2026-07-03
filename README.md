@@ -33,13 +33,17 @@ Le script est idempotent : le relancer n'insere pas de doublons.
 
 ## Apercu
 
-![Dashboard](docs/img/dashboard.svg)
+![Dashboard](docs/img/dashboard.png)
+
+![Bibliotheque de payloads](docs/img/payloads.png)
+
+![Page des techniques](docs/img/techniques.png)
+
+![Liste des cibles](docs/img/targets.png)
+
+![Mode diff](docs/img/diff.png)
 
 ![Detail d'une campagne](docs/img/campaign.svg)
-
-![Page des techniques](docs/img/techniques.svg)
-
-![Bibliotheque de payloads](docs/img/payloads.svg)
 
 ## Fonctionnement general
 
@@ -107,6 +111,11 @@ requetes et evite les erreurs HTTP 429. Les modeles de connecteur HTB et raw
 proposent `[5, 10]` par defaut. Ce throttle s'applique aussi aux chaines, au
 mode diff et au fingerprint.
 
+A ne pas confondre avec `poll_delay_ms` : le throttle (secondes) est la pause
+avant chaque envoi pour le rate limit, alors que `poll_delay_ms` (millisecondes)
+est l'attente entre deux interrogations du polling en attendant la reponse du
+bot. Ce sont deux reglages independants.
+
 Mode chat asynchrone (POST puis polling), pour les chats ou le POST accuse
 juste reception et la reponse arrive dans une seconde URL lue en GET (cas du
 lab TrynaSob):
@@ -119,6 +128,7 @@ lab TrynaSob):
   "poll_url": "http://CIBLE:PORT/api/messages",
   "poll_retries": 8,
   "poll_delay_ms": 1000,
+  "throttle": [5, 10],
   "messages_path": "$",
   "sender_field": "sender",
   "bot_value": "Bot",
@@ -242,8 +252,9 @@ comportement de deux modeles ou de deux configurations face a une meme attaque.
 
 ## Fingerprint
 
-Depuis la liste des cibles, le bouton Fingerprint lance une sonde inspiree de la
-methodologie de LLMmap. Plusieurs prompts d'auto-identification sont envoyes,
+Le bouton Fingerprint se trouve dans le menu Cibles (barre du haut), sur chaque
+cible de la liste, et en raccourci sur la page d'une campagne a cote de sa cible.
+Il lance une sonde inspiree de la methodologie de LLMmap. Plusieurs prompts d'auto-identification sont envoyes,
 puis les indices trouves dans les reponses sont scores par signatures ponderees
 pour proposer des hypotheses de modele classees avec un pourcentage de confiance
 (OpenAI, Anthropic, Meta, Google, Mistral, Cohere).
