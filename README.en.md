@@ -48,7 +48,7 @@ bar (the choice is stored in a cookie).
 
 ![Diff mode](docs/img/diff.png)
 
-![Campaign detail](docs/img/campaign.svg)
+![Campaign detail](docs/img/campaign.png)
 
 ## Overview
 

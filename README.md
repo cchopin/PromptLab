@@ -43,7 +43,7 @@ Le script est idempotent : le relancer n'insere pas de doublons.
 
 ![Mode diff](docs/img/diff.png)
 
-![Detail d'une campagne](docs/img/campaign.svg)
+![Detail d'une campagne](docs/img/campaign.png)
 
 ## Fonctionnement general
 
