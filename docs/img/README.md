@@ -5,6 +5,7 @@ Maquettes SVG au theme de l'app, referencees par le README :
 - `dashboard.svg` : page d'accueil, campagne et taux de succes par technique.
 - `campaign.svg` : detail d'une campagne (stats, Quick send, runs classes).
 - `techniques.svg` : page Techniques (ressources + fiches).
+- `payloads.svg` : bibliotheque de payloads (filtres, badges, actions).
 
 Ce sont des apercus SVG (illustrations fideles au theme), pas des captures
 brutes. Pour remplacer par de vraies captures, exporte en PNG depuis l'app en

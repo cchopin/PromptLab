@@ -11,13 +11,21 @@ authorized to test.
 
 ## Installation
 
+macOS and many Linux distributions manage Python as "externally managed"
+(PEP 668), so a global `pip install` fails. Use a virtual environment:
+
 ```
+python3 -m venv .venv
+source .venv/bin/activate
 pip install -r requirements.txt
 python seed_payloads.py
 python app.py
 ```
 
-The app starts on http://127.0.0.1:5000
+On Windows, activate with `.venv\Scripts\activate` instead of `source`.
+
+The app starts on http://127.0.0.1:5000. For later runs, just re-run
+`source .venv/bin/activate` then `python app.py`.
 
 `seed_payloads.py` creates the `promptlab.db` database and imports the initial
 cheatsheet. The script is idempotent: running it again does not create
@@ -35,6 +43,8 @@ bar (the choice is stored in a cookie).
 ![Campaign detail](docs/img/campaign.svg)
 
 ![Techniques page](docs/img/techniques.svg)
+
+![Payload library](docs/img/payloads.svg)
 
 ## Overview
 

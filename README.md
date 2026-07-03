@@ -11,13 +11,22 @@ des systemes que vous etes autorise a tester.
 
 ## Installation
 
+macOS et beaucoup de distributions Linux gerent Python en mode "externally
+managed" (PEP 668), donc un `pip install` global echoue. Utiliser un
+environnement virtuel :
+
 ```
+python3 -m venv .venv
+source .venv/bin/activate
 pip install -r requirements.txt
 python seed_payloads.py
 python app.py
 ```
 
-L'application demarre sur http://127.0.0.1:5000
+Sous Windows, activer avec `.venv\Scripts\activate` au lieu de `source`.
+
+L'application demarre sur http://127.0.0.1:5000. Pour les lancements suivants,
+il suffit de refaire `source .venv/bin/activate` puis `python app.py`.
 
 `seed_payloads.py` cree la base `promptlab.db` et importe la cheatsheet initiale.
 Le script est idempotent : le relancer n'insere pas de doublons.
@@ -29,6 +38,8 @@ Le script est idempotent : le relancer n'insere pas de doublons.
 ![Detail d'une campagne](docs/img/campaign.svg)
 
 ![Page des techniques](docs/img/techniques.svg)
+
+![Bibliotheque de payloads](docs/img/payloads.svg)
 
 ## Fonctionnement general
 
