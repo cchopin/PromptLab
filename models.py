@@ -35,6 +35,7 @@ class Technique(enum.Enum):
     adversarial_suffix = "adversarial_suffix"
     multimodal = "multimodal"
     memory_poisoning = "memory_poisoning"
+    agent_hijack = "agent_hijack"
 
 
 class Objective(enum.Enum):

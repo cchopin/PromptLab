@@ -245,6 +245,18 @@ TECHNIQUE_DOCS = {
             "en": "Isolate and sign memory, validate indexed documents, sandbox sessions.",
         },
     },
+    "agent_hijack": {
+        "titre": {"fr": "Agent hijack (détournement d'agent)", "en": "Agent hijack (autonomous agent takeover)"},
+        "principe": {
+            "fr": "Détourner la boucle autonome d'un agent : réécrire son objectif, contourner l'approbation humaine, enchaîner des outils pour escalader les privilèges, ou injecter dans un agent délégué (multi-agents).",
+            "en": "Hijack an autonomous agent's loop: rewrite its goal, bypass human approval, chain tools to escalate privileges, or inject into a delegated agent (multi-agent).",
+        },
+        "objectif": {"fr": "Prendre le contrôle des actions de l'agent.", "en": "Take control of the agent's actions."},
+        "defense": {
+            "fr": "Approbation humaine pour les actions sensibles, moindre privilège par outil, cloisonnement inter-agents, budgets et garde-fous de boucle.",
+            "en": "Human approval for sensitive actions, least privilege per tool, inter-agent isolation, budgets and loop guardrails.",
+        },
+    },
 }
 
 
@@ -274,6 +286,7 @@ TECHNIQUE_REFS = {
     "adversarial_suffix": "https://arxiv.org/abs/2404.07921",
     "multimodal": _OWASP01,
     "memory_poisoning": "https://arxiv.org/pdf/2504.03957",
+    "agent_hijack": "https://atlas.mitre.org/",
 }
 
 # Ressources generales.
