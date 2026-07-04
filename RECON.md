@@ -1,34 +1,34 @@
 # Reconnaissance d'un endpoint de chat LLM
 
-Langue : Francais | [English](RECON.en.md)
+Langue : Français | [English](RECON.en.md)
 
-Memo pratique pour identifier l'API d'une nouvelle box (HTB ou autre) et la
-configurer comme cible PromptLab. A garder sous la main a chaque nouveau lab.
+Mémo pratique pour identifier l'API d'une nouvelle box (HTB ou autre) et la
+configurer comme cible PromptLab. À garder sous la main à chaque nouveau lab.
 
-## Checklist DevTools (methode fiable)
+## Checklist DevTools (méthode fiable)
 
 1. Ouvrir la page du lab dans le navigateur.
 2. Ouvrir les DevTools (F12), onglet Network.
 3. Activer le filtre "Fetch/XHR" et cocher "Preserve log".
 4. Envoyer un message dans le chat.
-5. Observer les requetes et noter quatre choses:
+5. Observer les requêtes et noter quatre choses:
    - URL exacte (Request URL)
-   - Methode (POST le plus souvent)
-   - Corps envoye (onglet Payload) : le nom du champ qui contient le prompt
-   - Reponse (onglet Response) : ou se trouve le texte du bot
-6. Reperer le nombre de requetes declenchees par un seul envoi. Un chat simple
-   fait une requete. Un chat asynchrone en fait deux (voir plus bas).
+   - Méthode (POST le plus souvent)
+   - Corps envoyé (onglet Payload) : le nom du champ qui contient le prompt
+   - Réponse (onglet Response) : où se trouve le texte du bot
+6. Repérer le nombre de requêtes déclenchées par un seul envoi. Un chat simple
+   fait une requête. Un chat asynchrone en fait deux (voir plus bas).
 
-Astuce : l'onglet Response du GET qui liste les messages revele souvent d'un
+Astuce : l'onglet Response du GET qui liste les messages révèle souvent d'un
 coup les noms de champs (`content`, `sender`, valeurs `Bot` / `Victim`), ce qui
 renseigne directement `content_field`, `sender_field` et `bot_value`.
 
 ## Les deux patterns d'API courants
 
-### Pattern 1 : requete unique (synchrone)
+### Pattern 1 : requête unique (synchrone)
 
-Un POST envoie le prompt, la reponse de l'IA est directement dans le corps de
-reponse. Connecteur `htb` en mode simple, ou `raw_http`.
+Un POST envoie le prompt, la réponse de l'IA est directement dans le corps de
+réponse. Connecteur `htb` en mode simple, ou `raw_http`.
 
 ```json
 {
@@ -44,8 +44,8 @@ reponse. Connecteur `htb` en mode simple, ou `raw_http`.
 
 ### Pattern 2 : POST puis polling (asynchrone), type TrynaSob
 
-Un POST d'envoi accuse simplement reception (`{"message": "delivered"}`), et la
-reponse de l'IA apparait ensuite dans une seconde URL (liste des messages) lue
+Un POST d'envoi accuse simplement réception (`{"message": "delivered"}`), et la
+réponse de l'IA apparaît ensuite dans une seconde URL (liste des messages) lue
 en GET. Connecteur `htb` avec `poll_url`.
 
 ```json
@@ -64,34 +64,34 @@ en GET. Connecteur `htb` avec `poll_url`.
 }
 ```
 
-Comment le reconnaitre : un seul envoi declenche deux requetes (un POST court
-puis un GET), et le POST ne contient pas la reponse du bot. Le moteur poste le
-message puis interroge `poll_url` jusqu'a trouver le premier message `Bot` situe
-apres le dernier message `Victim`.
+Comment le reconnaître : un seul envoi déclenche deux requêtes (un POST court
+puis un GET), et le POST ne contient pas la réponse du bot. Le moteur poste le
+message puis interroge `poll_url` jusqu'à trouver le premier message `Bot` situé
+après le dernier message `Victim`.
 
 ## Indices rapides selon le serveur
 
 - `Cannot POST /xxx` en HTML : backend Express (Node). La route est fausse, la
   vraie existe ailleurs. Chercher `/api/...` dans l'onglet Network.
-- Reponse JSON `{"choices": [...]}` : API compatible OpenAI, utiliser le
+- Réponse JSON `{"choices": [...]}` : API compatible OpenAI, utiliser le
   connecteur `openai` avec `base_url`.
-- Reponse `{"content": [{"type": "text", ...}]}` : API Anthropic Messages.
+- Réponse `{"content": [{"type": "text", ...}]}` : API Anthropic Messages.
 - 401 / 403 : header d'auth manquant, l'ajouter dans `headers`.
 
-## Si le JS est minifie
+## Si le JS est minifié
 
 Onglet Sources, puis recherche globale (Cmd+Shift+F ou Ctrl+Shift+F) sur
 `fetch(`, `axios`, `/api/`, `/send` ou `/message`. Les routes apparaissent
-souvent en clair meme dans un bundle.
+souvent en clair même dans un bundle.
 
-## Raccourci : copier la requete depuis le navigateur
+## Raccourci : copier la requête depuis le navigateur
 
 Aucun outil externe requis. Dans l'onglet Network des DevTools, clic droit sur la
-requete d'envoi, puis "Copy > Copy as cURL". La commande obtenue contient tout :
-l'URL, la methode, les headers et le corps (donc le nom du champ du prompt). Il
+requête d'envoi, puis "Copy > Copy as cURL". La commande obtenue contient tout :
+l'URL, la méthode, les headers et le corps (donc le nom du champ du prompt). Il
 suffit de la relire pour construire l'auth_config.
 
-Exemple d'une commande copiee et sa traduction en cible raw_http :
+Exemple d'une commande copiée et sa traduction en cible raw_http :
 
 ```
 curl 'http://CIBLE:PORT/api/submit' -X POST \
@@ -112,17 +112,17 @@ devient :
 }
 ```
 
-Si la reponse est une page HTML (et non du JSON), voir la section suivante.
+Si la réponse est une page HTML (et non du JSON), voir la section suivante.
 
-## Cas particulier : la reponse est une page HTML
+## Cas particulier : la réponse est une page HTML
 
 Certains labs (ex: un formulaire de demande relu par une IA) repostent la page
-entiere avec la decision inseree dans le HTML, au lieu de renvoyer du JSON. Dans
+entière avec la décision insérée dans le HTML, au lieu de renvoyer du JSON. Dans
 ce cas `response_path` ne trouve rien et le connecteur retombe sur le HTML brut.
 
-Deux consequences pratiques :
+Deux conséquences pratiques :
 
-- Le texte du run contient toute la page. C'est normal, la reponse de l'IA (par
+- Le texte du run contient toute la page. C'est normal, la réponse de l'IA (par
   exemple "APPROVED" ou "DENIED") est quelque part dedans.
 - Pour classer automatiquement, utiliser le scoring par regex de la cible :
 
@@ -140,6 +140,6 @@ Deux consequences pratiques :
 }
 ```
 
-Le champ `scoring` classe le run en succes ou echec selon ce que contient la
-reponse, sans avoir a lire toute la page a la main. Regarder d'abord une reponse
-reelle pour caler les mots exacts (APPROVED, Decision: ACCEPT, etc.).
+Le champ `scoring` classe le run en succès ou échec selon ce que contient la
+réponse, sans avoir à lire toute la page à la main. Regarder d'abord une réponse
+réelle pour caler les mots exacts (APPROVED, Decision: ACCEPT, etc.).

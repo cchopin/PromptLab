@@ -1,23 +1,23 @@
 # PromptLab
 
-Langue : Francais | [English](README.en.md)
+Langue : Français | [English](README.en.md)
 
 [![Release](https://img.shields.io/github/v/release/cchopin/PromptLab)](https://github.com/cchopin/PromptLab/releases)
 [Cheatsheet en ligne](https://cchopin.github.io/PromptLab/) · [Releases](https://github.com/cchopin/PromptLab/releases)
 
 Workbench de red teaming pour tester, documenter et reproduire des injections
-de prompt contre des LLM. Concu pour le parcours HTB AI Red Teamer (COAE) et
-reutilisable pour auditer les LLM d'entreprise.
+de prompt contre des LLM. Conçu pour le parcours HTB AI Red Teamer (COAE) et
+réutilisable pour auditer les LLM d'entreprise.
 
-Outil local, mono-utilisateur, sans authentification. A n'utiliser que contre
-des systemes que vous etes autorise a tester.
+Outil local, mono-utilisateur, sans authentification. À n'utiliser que contre
+des systèmes que vous êtes autorisé à tester.
 
 Cheatsheet en ligne (sans installation) : https://cchopin.github.io/PromptLab/
 
 ## Installation
 
-macOS et beaucoup de distributions Linux gerent Python en mode "externally
-managed" (PEP 668), donc un `pip install` global echoue. Utiliser un
+macOS et beaucoup de distributions Linux gèrent Python en mode "externally
+managed" (PEP 668), donc un `pip install` global échoue. Utiliser un
 environnement virtuel :
 
 ```
@@ -30,17 +30,17 @@ python app.py
 
 Sous Windows, activer avec `.venv\Scripts\activate` au lieu de `source`.
 
-L'application demarre sur http://127.0.0.1:5000. Pour les lancements suivants,
+L'application démarre sur http://127.0.0.1:5000. Pour les lancements suivants,
 il suffit de refaire `source .venv/bin/activate` puis `python app.py`.
 
-`seed_payloads.py` cree la base `promptlab.db` et importe la cheatsheet initiale.
-Le script est idempotent : le relancer n'insere pas de doublons.
+`seed_payloads.py` crée la base `promptlab.db` et importe la cheatsheet initiale.
+Le script est idempotent : le relancer n'insère pas de doublons.
 
-## Apercu
+## Aperçu
 
 ![Dashboard](docs/img/dashboard.png)
 
-![Bibliotheque de payloads](docs/img/payloads.png)
+![Bibliothèque de payloads](docs/img/payloads.png)
 
 ![Page des techniques](docs/img/techniques.png)
 
@@ -48,22 +48,22 @@ Le script est idempotent : le relancer n'insere pas de doublons.
 
 ![Mode diff](docs/img/diff.png)
 
-![Detail d'une campagne](docs/img/campaign.png)
+![Détail d'une campagne](docs/img/campaign.png)
 
-## Fonctionnement general
+## Fonctionnement général
 
-1. Creer une cible (Target) avec son connecteur et son endpoint.
-2. Creer une campagne rattachee a cette cible.
+1. Créer une cible (Target) avec son connecteur et son endpoint.
+2. Créer une campagne rattachée à cette cible.
 3. Depuis la campagne, envoyer des payloads (ou du texte libre), remplir les
-   placeholders, et voir la reponse inline.
-4. Classer chaque run (succes / partiel / echec / erreur) et annoter.
-5. Optionnel : construire une chaine d'attaque multi-steps avec conditions de
+   placeholders, et voir la réponse inline.
+4. Classer chaque run (succès / partiel / échec / erreur) et annoter.
+5. Optionnel : construire une chaîne d'attaque multi-steps avec conditions de
    branchement.
 
 ## Connecteurs
 
-Le champ `auth_config` d'une cible est un objet JSON. Sa cle `connector` choisit
-l'implementation. Champs par connecteur :
+Le champ `auth_config` d'une cible est un objet JSON. Sa clé `connector` choisit
+l'implémentation. Champs par connecteur :
 
 ### openai (OpenAI, Azure, vLLM, Ollama, LM Studio)
 
@@ -78,7 +78,7 @@ l'implementation. Champs par connecteur :
 }
 ```
 
-Le modele peut aussi etre renseigne dans le champ Modele de la cible.
+Le modèle peut aussi être renseigné dans le champ Modèle de la cible.
 
 ### anthropic (API Messages)
 
@@ -94,7 +94,7 @@ Le modele peut aussi etre renseigne dans le champ Modele de la cible.
 
 ### htb (endpoint HTB custom)
 
-Deux modes. Mode simple, une requete POST dont la reponse contient le texte:
+Deux modes. Mode simple, une requête POST dont la réponse contient le texte:
 
 ```json
 {
@@ -107,22 +107,22 @@ Deux modes. Mode simple, une requete POST dont la reponse contient le texte:
 }
 ```
 
-`response_path` est une expression jsonpath vers le texte de reponse.
+`response_path` est une expression jsonpath vers le texte de réponse.
 
 Anti rate limit : tout connecteur accepte un champ `throttle` dans son
 `auth_config`, sous forme `[min, max]` en secondes (ou un nombre). Avant chaque
-envoi, une pause aleatoire dans cet intervalle est appliquee, ce qui espace les
-requetes et evite les erreurs HTTP 429. Les modeles de connecteur HTB et raw
-proposent `[5, 10]` par defaut. Ce throttle s'applique aussi aux chaines, au
+envoi, une pause aléatoire dans cet intervalle est appliquée, ce qui espace les
+requêtes et évite les erreurs HTTP 429. Les modèles de connecteur HTB et raw
+proposent `[5, 10]` par défaut. Ce throttle s'applique aussi aux chaînes, au
 mode diff et au fingerprint.
 
-A ne pas confondre avec `poll_delay_ms` : le throttle (secondes) est la pause
+À ne pas confondre avec `poll_delay_ms` : le throttle (secondes) est la pause
 avant chaque envoi pour le rate limit, alors que `poll_delay_ms` (millisecondes)
-est l'attente entre deux interrogations du polling en attendant la reponse du
-bot. Ce sont deux reglages independants.
+est l'attente entre deux interrogations du polling en attendant la réponse du
+bot. Ce sont deux réglages indépendants.
 
-Mode chat asynchrone (POST puis polling), pour les chats ou le POST accuse
-juste reception et la reponse arrive dans une seconde URL lue en GET (cas du
+Mode chat asynchrone (POST puis polling), pour les chats où le POST accuse
+juste réception et la réponse arrive dans une seconde URL lue en GET (cas du
 lab TrynaSob):
 
 ```json
@@ -142,14 +142,14 @@ lab TrynaSob):
 }
 ```
 
-Quand `poll_url` est present, le moteur poste le message puis interroge cette
-URL jusqu'a trouver le premier message du bot situe apres le dernier message
-envoye. Les cookies sont conserves entre le POST et le polling.
+Quand `poll_url` est présent, le moteur poste le message puis interroge cette
+URL jusqu'à trouver le premier message du bot situé après le dernier message
+envoyé. Les cookies sont conservés entre le POST et le polling.
 
-Le formulaire de cible propose un selecteur "Modele de connecteur" qui
-pre-remplit ce JSON: choisir un modele puis "Inserer le modele".
+Le formulaire de cible propose un sélecteur "Modèle de connecteur" qui
+pré-remplit ce JSON: choisir un modèle puis "Insérer le modèle".
 
-### raw_http (requete brute)
+### raw_http (requête brute)
 
 ```json
 {
@@ -163,38 +163,38 @@ pre-remplit ce JSON: choisir un modele puis "Inserer le modele".
 ```
 
 `body_type` vaut `json`, `form` ou `raw`. Dans `body_template`, `{PROMPT}` est
-remplace par le prompt (echappe pour JSON).
+remplacé par le prompt (échappé pour JSON).
 
 ## Reconnaissance d'un nouvel endpoint
 
-Pour identifier l'API d'une nouvelle box et la configurer, voir le memo detaille
-`RECON.md`. En resume:
+Pour identifier l'API d'une nouvelle box et la configurer, voir le mémo détaillé
+`RECON.md`. En résumé:
 
 Ouvrir les DevTools (F12), onglet Network, filtre Fetch/XHR, cocher Preserve
-log, puis envoyer un message dans le chat. Noter l'URL, la methode, le champ du
-prompt dans le corps envoye (onglet Payload) et l'emplacement du texte de
-reponse (onglet Response). Si un seul envoi declenche deux requetes (un POST
+log, puis envoyer un message dans le chat. Noter l'URL, la méthode, le champ du
+prompt dans le corps envoyé (onglet Payload) et l'emplacement du texte de
+réponse (onglet Response). Si un seul envoi déclenche deux requêtes (un POST
 court puis un GET), c'est le pattern asynchrone: utiliser le mode `poll_url` du
 connecteur htb.
 
-Reperes utiles: `Cannot POST /xxx` en HTML indique un backend Express (la route
-testee est fausse), une reponse `{"choices": [...]}` indique une API compatible
+Repères utiles: `Cannot POST /xxx` en HTML indique un backend Express (la route
+testée est fausse), une réponse `{"choices": [...]}` indique une API compatible
 OpenAI, et `{"content": [{"type": "text"}]}` une API Anthropic.
 
 ## Payloads
 
 Un payload est un template avec des placeholders en majuscules, par exemple
-`{ACTION}`, `{SECRET}`, `{TARGET}`. Au moment de l'envoi, le formulaire detecte
+`{ACTION}`, `{SECRET}`, `{TARGET}`. Au moment de l'envoi, le formulaire détecte
 les placeholders et propose un champ pour chacun.
 
-La bibliotheque est filtrable par technique, objectif et type (direct/indirect),
+La bibliothèque est filtrable par technique, objectif et type (direct/indirect),
 et supporte l'import/export JSON.
 
-## Chaines
+## Chaînes
 
-Une chaine est une suite de steps executes sequentiellement. Chaque step envoie
-un payload ou un texte libre, puis evalue des conditions pour router vers le step
-suivant, s'arreter en succes, ou continuer.
+Une chaîne est une suite de steps exécutés séquentiellement. Chaque step envoie
+un payload ou un texte libre, puis évalue des conditions pour router vers le step
+suivant, s'arrêter en succès, ou continuer.
 
 Format JSON d'un step :
 
@@ -210,25 +210,25 @@ Format JSON d'un step :
 }
 ```
 
-Le placeholder `{PREVIOUS_RESPONSE}` dans un texte libre est remplace par la
-reponse du step precedent. Conditions supportees : `on_contains`, `on_regex`,
-`on_status`. Chaque step execute produit un Run rattache a la chaine.
+Le placeholder `{PREVIOUS_RESPONSE}` dans un texte libre est remplacé par la
+réponse du step précédent. Conditions supportées : `on_contains`, `on_regex`,
+`on_status`. Chaque step exécuté produit un Run rattaché à la chaîne.
 
 ## Scoring automatique
 
-Un HTTP 200 ne veut pas dire que le payload a fonctionne. Le scoring classe les
-reponses a partir de jeux de regex par objectif, livres par defaut avec l'outil,
-et d'une ponderation : chaque pattern porte un poids, on compare le poids total
-des signaux de succes et de refus. Signaux mixtes (succes + refus) : le run est
-marque `partial`. Aucun signal : le run reste `a classer`.
+Un HTTP 200 ne veut pas dire que le payload a fonctionné. Le scoring classe les
+réponses à partir de jeux de regex par objectif, livrés par défaut avec l'outil,
+et d'une pondération : chaque pattern porte un poids, on compare le poids total
+des signaux de succès et de refus. Signaux mixtes (succès + refus) : le run est
+marqué `partial`. Aucun signal : le run reste `à classer`.
 
-Par prudence, on ne marque un succes que sur un indice clair (secret revele,
-decision accordee, prompt systeme recopie, sortie d'outil). Pour les objectifs
-ou "succes" est ambigu (bypass_refusal, bypass_filter), seuls les refus sont
-detectes par defaut (fail), le reste reste a classer, pour eviter les faux
+Par prudence, on ne marque un succès que sur un indice clair (secret révélé,
+décision accordée, prompt système recopié, sortie d'outil). Pour les objectifs
+où "succès" est ambigu (bypass_refusal, bypass_filter), seuls les refus sont
+détectés par défaut (fail), le reste reste à classer, pour éviter les faux
 positifs.
 
-On peut surcharger ou completer les regles dans le `auth_config` de la cible :
+On peut surcharger ou compléter les règles dans le `auth_config` de la cible :
 
 ```json
 {
@@ -247,52 +247,53 @@ On peut surcharger ou completer les regles dans le `auth_config` de la cible :
 }
 ```
 
-Le taux de succes reste calcule sur les runs juges (succes + partiel + echec).
+Le taux de succès reste calculé sur les runs jugés (succès + partiel + échec).
 
 ## Mode diff
 
-La page Diff envoie un meme prompt (payload ou texte libre) a deux cibles et
-affiche les reponses cote a cote, sans creer de runs. Utile pour comparer le
-comportement de deux modeles ou de deux configurations face a une meme attaque.
+La page Diff envoie un même prompt (payload ou texte libre) à deux cibles et
+affiche les réponses côte à côte, sans créer de runs. Utile pour comparer le
+comportement de deux modèles ou de deux configurations face à une même attaque.
 
 ## Fingerprint
 
 Le bouton Fingerprint se trouve dans le menu Cibles (barre du haut), sur chaque
-cible de la liste, et en raccourci sur la page d'une campagne a cote de sa cible.
-Il lance une sonde inspiree de la methodologie de LLMmap. Plusieurs prompts d'auto-identification sont envoyes,
-puis les indices trouves dans les reponses sont scores par signatures ponderees
-pour proposer des hypotheses de modele classees avec un pourcentage de confiance
-(OpenAI, Anthropic, Meta, Google, Mistral, Cohere).
+cible de la liste, et en raccourci sur la page d'une campagne à côté de sa cible.
+Il lance une sonde inspirée de la méthodologie de LLMmap. Plusieurs prompts
+d'auto-identification sont envoyés, puis les indices trouvés dans les réponses
+sont scorés par signatures pondérées pour proposer des hypothèses de modèle
+classées avec un pourcentage de confiance (OpenAI, Anthropic, Meta, Google,
+Mistral, Cohere).
 
-Ce n'est pas le vrai LLMmap (outil ML avec modele entraine), mais une variante
-legere par signatures, sans dependance lourde. Un point d'extension est prevu
-dans `fingerprint_service.py` pour brancher le vrai LLMmap plus tard. Le resultat
-reste indicatif : beaucoup de modeles refusent de se nommer. Le fingerprint
-passe par le connecteur, donc le throttle eventuel de la cible s'applique et il
+Ce n'est pas le vrai LLMmap (outil ML avec modèle entraîné), mais une variante
+légère par signatures, sans dépendance lourde. Un point d'extension est prévu
+dans `fingerprint_service.py` pour brancher le vrai LLMmap plus tard. Le résultat
+reste indicatif : beaucoup de modèles refusent de se nommer. Le fingerprint
+passe par le connecteur, donc le throttle éventuel de la cible s'applique et il
 peut prendre plusieurs dizaines de secondes.
 
 ## Rapport Markdown
 
-Le bouton Export MD d'une campagne genere un rapport Markdown detaille : cible,
-statistiques, taux par technique, puis le detail de chaque run (verdict, prompt
-envoye, reponse, notes), groupe par resultat. Pratique pour les write-ups.
+Le bouton Export MD d'une campagne génère un rapport Markdown détaillé : cible,
+statistiques, taux par technique, puis le détail de chaque run (verdict, prompt
+envoyé, réponse, notes), groupé par résultat. Pratique pour les write-ups.
 
 ## API REST
 
 Une API JSON locale (sans authentification) permet le scripting externe. Point
-d'entree : `GET /api`. Principaux endpoints :
+d'entrée : `GET /api`. Principaux endpoints :
 
 ```
 GET  /api/targets                 liste des cibles
-POST /api/targets                 cree une cible (JSON)
+POST /api/targets                 crée une cible (JSON)
 GET  /api/payloads                liste des payloads (filtres ?technique=...)
 GET  /api/campaigns               liste des campagnes
-POST /api/campaigns               cree une campagne (JSON)
-GET  /api/campaigns/<id>          detail d'une campagne
+POST /api/campaigns               crée une campagne (JSON)
+GET  /api/campaigns/<id>          détail d'une campagne
 GET  /api/campaigns/<id>/stats    statistiques + taux par technique
 GET  /api/campaigns/<id>/runs     liste des runs (filtre ?result=...)
 POST /api/campaigns/<id>/send     envoie un prompt et retourne le run
-GET  /api/runs/<id>               detail d'un run
+GET  /api/runs/<id>               détail d'un run
 ```
 
 Exemple d'envoi :
@@ -310,12 +311,14 @@ promptlab/
   app.py                  Point d'entree Flask et routes
   config.py               Configuration (DB, defauts)
   models.py               Modeles SQLAlchemy
+  i18n.py                 Traductions FR / EN
+  techniques_data.py      Fiches techniques et references (partage app/cheatsheet)
   connectors/             OpenAI, Anthropic, HTB, raw HTTP
-  services/               payload, campaign, chain, analysis, fingerprint
+  services/               payload, campaign, chain, analysis, scoring, fingerprint
   templates/              Vues Jinja2
   static/                 style.css, app.js, favicon.svg
-  i18n.py                 Traductions FR / EN
   seed_payloads.py        Import de la cheatsheet
+  build_cheatsheet.py     Generateur de la cheatsheet statique (docs/)
   RECON.md                Memo reco d'un endpoint de chat
   promptlab.db            Base SQLite (gitignore)
 ```

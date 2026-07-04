@@ -32,6 +32,9 @@ class Technique(enum.Enum):
     tool_misuse = "tool_misuse"
     exfil_render = "exfil_render"
     chain_combo = "chain_combo"
+    adversarial_suffix = "adversarial_suffix"
+    multimodal = "multimodal"
+    memory_poisoning = "memory_poisoning"
 
 
 class Objective(enum.Enum):
