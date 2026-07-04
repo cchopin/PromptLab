@@ -259,6 +259,7 @@ def render(lang, payloads):
     out.append('<html lang="%s"><head><meta charset="utf-8">' % u["lang_code"])
     out.append('<meta name="viewport" content="width=device-width, initial-scale=1">')
     out.append("<title>%s</title>" % esc(u["title"]))
+    out.append('<link rel="icon" type="image/svg+xml" href="favicon.svg">')
     out.append("<style>%s</style></head><body>" % CSS)
 
     out.append('<div class="topbar"><span class="brand">Prompt<span>Lab</span></span>')
