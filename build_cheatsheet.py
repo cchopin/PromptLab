@@ -12,11 +12,14 @@
 import ast
 import html
 import os
+import re
 
 from techniques_data import TECHNIQUE_DOCS, TECHNIQUE_REFS, TECHNIQUE_RESOURCES
 
 BASE_DIR = os.path.abspath(os.path.dirname(__file__))
 DOCS_DIR = os.path.join(BASE_DIR, "docs")
+
+PLACEHOLDER_RE = re.compile(r"\{([A-Z0-9_]+)\}")
 
 
 def load_payloads():
@@ -29,6 +32,16 @@ def load_payloads():
                 if isinstance(target, ast.Name) and target.id == "PAYLOADS":
                     return [tuple(ast.literal_eval(el)) for el in node.value.elts]
     return []
+
+
+def collect_placeholders(payloads):
+    # Liste ordonnee et unique des placeholders presents dans les payloads.
+    seen = []
+    for p in payloads:
+        for name in PLACEHOLDER_RE.findall(p[1]):
+            if name not in seen:
+                seen.append(name)
+    return seen
 
 
 # Libelles d'interface par langue
@@ -56,6 +69,10 @@ UI = {
         "count_one": "payload",
         "count_many": "payloads",
         "made": "Generated from PromptLab. Not affiliated with the referenced projects.",
+        "placeholders": "Placeholders",
+        "ph_hint": "Fill values to substitute them in the payloads and copies.",
+        "expand_all": "Expand all",
+        "collapse_all": "Collapse all",
     },
     "fr": {
         "lang_code": "fr",
@@ -80,6 +97,10 @@ UI = {
         "count_one": "payload",
         "count_many": "payloads",
         "made": "Genere depuis PromptLab. Sans affiliation avec les projets references.",
+        "placeholders": "Placeholders",
+        "ph_hint": "Remplis les valeurs pour les injecter dans les payloads et les copies.",
+        "expand_all": "Tout ouvrir",
+        "collapse_all": "Tout fermer",
     },
 }
 
@@ -94,21 +115,27 @@ a{color:var(--accent);text-decoration:none;}a:hover{text-decoration:underline;}
 .brand{font-size:16px;font-weight:bold;color:var(--text);}.brand span{color:var(--accent);}
 .topbar .right{margin-left:auto;display:flex;gap:14px;align-items:center;}
 .container{max-width:1100px;margin:0 auto;padding:24px;}
-h1{font-size:20px;}h2{font-size:16px;margin-top:28px;}
+h1{font-size:20px;}h2{font-size:16px;margin:0;display:inline;}
 .muted{color:var(--muted);}
 .disclaimer{color:var(--accent);border:1px solid var(--border);border-radius:6px;padding:8px 12px;background:rgba(233,69,96,0.06);font-size:12px;margin:14px 0;}
 .panel{background:var(--bg-alt);border:1px solid var(--border);border-radius:6px;padding:14px;margin-bottom:16px;}
 .chips{display:flex;gap:6px;flex-wrap:wrap;}
 .chip{display:inline-block;padding:3px 9px;border-radius:3px;font-size:12px;background:var(--panel);color:var(--text);border:1px solid var(--border);}
+.ph-grid{display:flex;gap:12px;flex-wrap:wrap;margin-top:10px;}
+.ph-grid label{display:block;font-size:11px;color:var(--muted);text-transform:uppercase;margin-bottom:4px;}
 .controls{display:flex;gap:12px;flex-wrap:wrap;align-items:flex-end;position:sticky;top:53px;background:var(--bg);padding:12px 0;z-index:5;}
 .controls label{display:block;font-size:11px;color:var(--muted);text-transform:uppercase;margin-bottom:4px;}
 input,select{background:var(--bg-alt);color:var(--text);border:1px solid var(--border);border-radius:4px;padding:8px 10px;font-family:var(--mono);font-size:13px;}
-input#search{min-width:260px;flex:1;}
-.count{color:var(--muted);font-size:12px;margin-left:auto;}
-.tech{margin-top:22px;}
-.tech-head{border-bottom:1px solid var(--border);padding-bottom:6px;margin-bottom:10px;}
-.tech-head h2{margin:0;display:inline;}
-.tech-meta{font-size:12px;color:var(--muted);margin-top:6px;}
+input#search{min-width:220px;flex:1;}
+.count{color:var(--muted);font-size:12px;}
+.btn{background:var(--panel);color:var(--text);border:1px solid var(--border);border-radius:4px;padding:5px 11px;cursor:pointer;font-family:var(--mono);font-size:12px;}
+.btn:hover{background:#14417a;}
+.tech{margin-top:14px;}
+.tech-head{border-bottom:1px solid var(--border);padding:6px 0;cursor:pointer;user-select:none;}
+.tech-head .arrow{display:inline-block;color:var(--muted);margin-right:8px;transition:transform .15s;}
+.tech.collapsed .arrow{transform:rotate(-90deg);}
+.tech.collapsed .tech-body{display:none;}
+.tech-meta{font-size:12px;color:var(--muted);margin:8px 0 10px;}
 .tech-meta b{color:var(--text);font-weight:600;}
 .pl{background:var(--bg-alt);border:1px solid var(--border);border-radius:6px;padding:12px;margin-bottom:10px;}
 .pl-top{display:flex;justify-content:space-between;gap:10px;align-items:center;flex-wrap:wrap;}
@@ -116,8 +143,6 @@ input#search{min-width:260px;flex:1;}
 .badge{display:inline-block;padding:2px 8px;border-radius:3px;font-size:11px;border:1px solid var(--border);}
 .b-obj{background:#2a1d4a;}.b-type{background:#1d2f5a;}
 .pl-body{background:#0d1024;border:1px solid var(--border);border-radius:4px;padding:10px;white-space:pre-wrap;word-break:break-word;margin-top:8px;font-size:13px;color:#cdd6f4;}
-.btn{background:var(--panel);color:var(--text);border:1px solid var(--border);border-radius:4px;padding:5px 11px;cursor:pointer;font-family:var(--mono);font-size:12px;}
-.btn:hover{background:#14417a;}
 .hidden{display:none;}
 footer{text-align:center;color:var(--muted);font-size:12px;padding:24px;}
 """
@@ -131,9 +156,25 @@ const countEl=document.getElementById('count');
 const cards=[...document.querySelectorAll('.pl')];
 const sections=[...document.querySelectorAll('.tech')];
 const ONE=countEl.dataset.one, MANY=countEl.dataset.many;
+
+// Remplacement des placeholders ({ACTION}, {SECRET}, ...) dans les payloads.
+const phInputs=[...document.querySelectorAll('.ph-input')];
+function fillPlaceholders(){
+  const map={};
+  phInputs.forEach(i=>{map[i.dataset.key]=i.value;});
+  document.querySelectorAll('.pl-body').forEach(body=>{
+    let t=body.dataset.template;
+    for(const k in map){ if(map[k]) t=t.split('{'+k+'}').join(map[k]); }
+    body.textContent=t;
+  });
+}
+phInputs.forEach(i=>i.addEventListener('input',fillPlaceholders));
+
+// Filtre + recherche
 function apply(){
   const q=(search.value||'').toLowerCase();
   const t=fTech.value, o=fObj.value, ty=fType.value;
+  const active=!!(q||t||o||ty);
   let n=0;
   cards.forEach(c=>{
     const ok=(!q||c.dataset.search.includes(q))&&(!t||c.dataset.technique===t)&&(!o||c.dataset.objective===o)&&(!ty||c.dataset.type===ty);
@@ -143,16 +184,31 @@ function apply(){
   sections.forEach(s=>{
     const vis=s.querySelectorAll('.pl:not(.hidden)').length;
     s.classList.toggle('hidden',vis===0);
+    if(active&&vis>0)s.classList.remove('collapsed'); // ouvrir les sections qui matchent
   });
   countEl.textContent=n+' '+(n===1?ONE:MANY);
 }
 [search,fTech,fObj,fType].forEach(el=>el.addEventListener('input',apply));
+
+// Repli des categories (ascenseur)
+document.querySelectorAll('.tech-head').forEach(h=>{
+  h.addEventListener('click',(e)=>{
+    if(e.target.tagName==='A')return; // ne pas replier en cliquant un lien
+    h.closest('.tech').classList.toggle('collapsed');
+  });
+});
+document.getElementById('expand-all').addEventListener('click',()=>sections.forEach(s=>s.classList.remove('collapsed')));
+document.getElementById('collapse-all').addEventListener('click',()=>sections.forEach(s=>s.classList.add('collapsed')));
+
+// Copie (reprend la version avec placeholders remplis)
 document.querySelectorAll('.copy').forEach(btn=>{
   btn.addEventListener('click',async()=>{
     const pre=btn.closest('.pl').querySelector('.pl-body');
     try{await navigator.clipboard.writeText(pre.textContent);const o=btn.textContent;btn.textContent=btn.dataset.copied;setTimeout(()=>btn.textContent=o,1200);}catch(e){}
   });
 });
+
+fillPlaceholders();
 apply();
 """
 
@@ -164,10 +220,10 @@ def esc(s):
 def render(lang, payloads):
     u = UI[lang]
 
-    # options des filtres (dans l'ordre d'apparition)
     techniques = [k for k in TECHNIQUE_DOCS if any(p[2] == k for p in payloads)]
     objectives = sorted({p[3] for p in payloads})
     types = sorted({p[4] for p in payloads})
+    placeholders = collect_placeholders(payloads)
 
     def option_list(values):
         return "".join('<option value="%s">%s</option>' % (esc(v), esc(v)) for v in values)
@@ -198,6 +254,16 @@ def render(lang, payloads):
         out.append('<a class="chip" href="%s" target="_blank" rel="noopener">%s</a>' % (esc(url), esc(label)))
     out.append("</div></div>")
 
+    # placeholders
+    if placeholders:
+        out.append('<div class="panel"><strong>%s</strong> <span class="muted">%s</span>'
+                   % (esc(u["placeholders"]), esc(u["ph_hint"])))
+        out.append('<div class="ph-grid">')
+        for ph in placeholders:
+            out.append('<div><label>%s</label><input class="ph-input" data-key="%s" placeholder="{%s}"></div>'
+                       % (esc(ph), esc(ph), esc(ph)))
+        out.append("</div></div>")
+
     # controles
     out.append('<div class="controls">')
     out.append('<div style="flex:1;"><label>%s</label><input id="search" type="text" placeholder="%s"></div>'
@@ -208,6 +274,8 @@ def render(lang, payloads):
                % (esc(u["f_objective"]), esc(u["all"]), option_list(objectives)))
     out.append('<div><label>%s</label><select id="f-type"><option value="">%s</option>%s</select></div>'
                % (esc(u["f_type"]), esc(u["all"]), option_list(types)))
+    out.append('<div><button class="btn" id="expand-all">%s</button> <button class="btn" id="collapse-all">%s</button></div>'
+               % (esc(u["expand_all"]), esc(u["collapse_all"])))
     out.append('<span class="count" id="count" data-one="%s" data-many="%s"></span>'
                % (esc(u["count_one"]), esc(u["count_many"])))
     out.append("</div>")
@@ -218,15 +286,18 @@ def render(lang, payloads):
         titre = doc.get("titre", {}).get(lang, tech) if doc else tech
         ref = TECHNIQUE_REFS.get(tech)
         out.append('<div class="tech">')
-        out.append('<div class="tech-head"><h2>%s</h2> <span class="chip">%s</span>' % (esc(titre), esc(tech)))
+        out.append('<div class="tech-head"><span class="arrow">&#9662;</span>')
+        out.append('<h2>%s</h2> <span class="chip">%s</span>' % (esc(titre), esc(tech)))
         if ref:
             out.append(' <a class="chip" href="%s" target="_blank" rel="noopener">%s</a>' % (esc(ref), esc(u["reference"])))
+        out.append("</div>")
+
+        out.append('<div class="tech-body">')
         if doc:
             out.append('<div class="tech-meta"><b>%s :</b> %s <b>%s :</b> %s <b>%s :</b> %s</div>'
                        % (esc(u["principle"]), esc(doc["principe"][lang]),
                           esc(u["objective"]), esc(doc["objectif"][lang]),
                           esc(u["defense"]), esc(doc["defense"][lang])))
-        out.append("</div>")
 
         for name, content, technique, objective, itype in payloads:
             if technique != tech:
@@ -239,9 +310,10 @@ def render(lang, payloads):
             out.append('<span class="badge b-type">%s</span> ' % esc(itype))
             out.append('<button class="btn copy" data-copied="%s">%s</button>' % (esc(u["copied"]), esc(u["copy"])))
             out.append("</span></div>")
-            out.append('<div class="pl-body">%s</div>' % esc(content))
+            out.append('<div class="pl-body" data-template="%s">%s</div>' % (esc(content), esc(content)))
             out.append("</div>")
-        out.append("</div>")
+        out.append("</div>")  # tech-body
+        out.append("</div>")  # tech
 
     out.append('<footer>%s</footer>' % esc(u["made"]))
     out.append("</div>")
