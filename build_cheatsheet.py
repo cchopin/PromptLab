@@ -28,6 +28,21 @@ PLACEHOLDER_RE = re.compile(r"\{([A-Z0-9_]+)\}")
 REPO_URL = "https://github.com/cchopin/PromptLab"
 STATUSES = ["untested", "success", "partial", "fail"]
 
+# Regroupement des techniques par grande famille (pour la navigation).
+FAMILIES = [
+    ("direct", ["override", "leak", "role_switch", "jailbreak", "narration",
+                "few_shot", "prefix_injection", "refusal_suppression", "encoding",
+                "partial_exfil", "filter_bypass", "adversarial_suffix",
+                "chain_combo", "exfil_render"]),
+    ("indirect", ["indirect_html", "indirect_csv", "indirect_email", "multimodal"]),
+    ("agentic", ["tool_misuse", "agent_hijack", "memory_poisoning"]),
+]
+FAMILY_LABELS = {
+    "direct": {"fr": "Directes", "en": "Direct"},
+    "indirect": {"fr": "Indirectes", "en": "Indirect"},
+    "agentic": {"fr": "Agentiques", "en": "Agentic"},
+}
+
 
 def load_payloads():
     src = open(os.path.join(BASE_DIR, "seed_payloads.py"), encoding="utf-8").read()
@@ -108,6 +123,8 @@ a{color:var(--accent);text-decoration:none;}a:hover{text-decoration:underline;}
 .layout{display:grid;grid-template-columns:210px 1fr;gap:22px;align-items:start;}
 .sidenav{position:sticky;top:60px;font-size:12px;max-height:calc(100vh - 80px);overflow:auto;}
 .sidenav .navtitle{color:var(--muted);text-transform:uppercase;font-size:10px;letter-spacing:.5px;margin-bottom:6px;}
+.sidenav .fam{color:var(--text);text-transform:uppercase;font-size:10px;letter-spacing:.5px;margin:12px 0 4px;border-bottom:1px solid var(--border);padding-bottom:3px;}
+.sidenav .fam:first-child{margin-top:0;}
 .sidenav a{display:flex;justify-content:space-between;gap:8px;color:var(--muted);padding:3px 7px;border-radius:4px;}
 .sidenav a:hover{background:var(--bg-alt);color:var(--text);text-decoration:none;}
 .sidenav a .cnt{color:#5a6699;}
@@ -241,6 +258,11 @@ def render(lang, payloads):
     counts = {k: sum(1 for p in payloads if p[2] == k) for k in techniques}
     status_labels = {s: u["st_" + s] for s in STATUSES}
 
+    # ordre des sections et du filtre, aligne sur les familles
+    present = set(techniques)
+    ordered = [t for _, techs in FAMILIES for t in techs if t in present]
+    ordered += [t for t in techniques if t not in ordered]
+
     def option_list(values):
         return "".join('<option value="%s">%s</option>' % (esc(v), esc(v)) for v in values)
 
@@ -258,11 +280,16 @@ def render(lang, payloads):
 
     out.append('<div class="container"><div class="layout">')
 
-    # colonne de gauche : navigation des techniques
-    out.append('<nav class="sidenav"><div class="navtitle">%s</div>' % esc(u["nav_title"]))
-    for tech in techniques:
-        out.append('<a href="#tech-%s">%s <span class="cnt">%d</span></a>'
-                   % (esc(tech), esc(tech), counts[tech]))
+    # colonne de gauche : navigation groupee par famille
+    out.append('<nav class="sidenav">')
+    for fam, techs in FAMILIES:
+        fam_techs = [t for t in techs if t in present]
+        if not fam_techs:
+            continue
+        out.append('<div class="fam">%s</div>' % esc(FAMILY_LABELS[fam][lang]))
+        for tech in fam_techs:
+            out.append('<a href="#tech-%s">%s <span class="cnt">%d</span></a>'
+                       % (esc(tech), esc(tech), counts[tech]))
     out.append("</nav>")
 
     # colonne principale
@@ -299,7 +326,7 @@ def render(lang, payloads):
     out.append('<div style="flex:1;"><label>%s</label><input id="search" type="text" placeholder="%s"></div>'
                % (esc(u["f_technique"] + " / " + u["f_objective"]), esc(u["search"])))
     out.append('<div><label>%s</label><select id="f-technique"><option value="">%s</option>%s</select></div>'
-               % (esc(u["f_technique"]), esc(u["all"]), option_list(techniques)))
+               % (esc(u["f_technique"]), esc(u["all"]), option_list(ordered)))
     out.append('<div><label>%s</label><select id="f-objective"><option value="">%s</option>%s</select></div>'
                % (esc(u["f_objective"]), esc(u["all"]), option_list(objectives)))
     out.append('<div><label>%s</label><select id="f-type"><option value="">%s</option>%s</select></div>'
@@ -310,8 +337,8 @@ def render(lang, payloads):
     out.append('<div class="count-line"><span class="count" id="count" data-one="%s" data-many="%s"></span></div>'
                % (esc(u["count_one"]), esc(u["count_many"])))
 
-    # sections par technique
-    for tech in techniques:
+    # sections par technique (ordre des familles)
+    for tech in ordered:
         doc = TECHNIQUE_DOCS.get(tech, {})
         titre = doc.get("titre", {}).get(lang, tech) if doc else tech
         ref = TECHNIQUE_REFS.get(tech)
