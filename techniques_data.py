@@ -300,3 +300,18 @@ TECHNIQUE_RESOURCES = [
     ("L1B3RT4S (jailbreaks)", "https://github.com/elder-plinius/L1B3RT4S"),
     ("CL4R1T4S (leaked system prompts)", "https://github.com/elder-plinius/CL4R1T4S"),
 ]
+
+# Regroupement des techniques par grande famille (nav app + cheatsheet).
+TECHNIQUE_FAMILIES = [
+    ("direct", ["override", "leak", "role_switch", "jailbreak", "narration",
+                "few_shot", "prefix_injection", "refusal_suppression", "encoding",
+                "partial_exfil", "filter_bypass", "adversarial_suffix",
+                "chain_combo", "exfil_render"]),
+    ("indirect", ["indirect_html", "indirect_csv", "indirect_email", "multimodal"]),
+    ("agentic", ["tool_misuse", "agent_hijack", "memory_poisoning"]),
+]
+FAMILY_LABELS = {
+    "direct": {"fr": "Directes", "en": "Direct"},
+    "indirect": {"fr": "Indirectes", "en": "Indirect"},
+    "agentic": {"fr": "Agentiques", "en": "Agentic"},
+}

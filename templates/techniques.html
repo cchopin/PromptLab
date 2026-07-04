@@ -16,8 +16,10 @@
 </div>
 {% endif %}
 
+{% for g in groups %}
+<h2>{{ g.label }}</h2>
 <div class="tech-grid">
-  {% for d in docs %}
+  {% for d in g.docs %}
   <div class="panel tech-card">
     <div class="flex-between">
       <h3>{{ d.titre }}</h3>
@@ -35,5 +37,6 @@
   </div>
   {% endfor %}
 </div>
+{% endfor %}
 
 {% endblock %}

@@ -49,7 +49,10 @@ def create_app():
 
 # Les fiches techniques, references et ressources sont dans techniques_data.py
 # (module pur, partage avec le generateur de cheatsheet statique).
-from techniques_data import TECHNIQUE_DOCS, TECHNIQUE_REFS, TECHNIQUE_RESOURCES
+from techniques_data import (
+    TECHNIQUE_DOCS, TECHNIQUE_REFS, TECHNIQUE_RESOURCES,
+    TECHNIQUE_FAMILIES, FAMILY_LABELS,
+)
 
 def technique_docs_for(lang):
     # Retourne les fiches techniques resolues dans la langue, dans l'ordre de
@@ -68,6 +71,23 @@ def technique_docs_for(lang):
             "ref": TECHNIQUE_REFS.get(tech.value),
         })
     return docs
+
+
+def technique_families_for(lang):
+    # Regroupe les fiches techniques par grande famille (direct/indirect/agentic).
+    by_code = {d["code"]: d for d in technique_docs_for(lang)}
+    groups = []
+    used = set()
+    for fam, codes in TECHNIQUE_FAMILIES:
+        items = [by_code[c] for c in codes if c in by_code]
+        used.update(codes)
+        if items:
+            label = FAMILY_LABELS[fam].get(lang, FAMILY_LABELS[fam]["fr"])
+            groups.append({"label": label, "docs": items})
+    extra = [d for c, d in by_code.items() if c not in used]
+    if extra:
+        groups.append({"label": "…", "docs": extra})
+    return groups
 
 
 # Listes d'enums exposees aux templates (pour les menus deroulants)
@@ -111,7 +131,7 @@ def register_routes(app):
         lang = current_lang()
         return render_template(
             "techniques.html",
-            docs=technique_docs_for(lang),
+            groups=technique_families_for(lang),
             resources=TECHNIQUE_RESOURCES,
         )
 

@@ -19,7 +19,10 @@ import json
 import os
 import re
 
-from techniques_data import TECHNIQUE_DOCS, TECHNIQUE_REFS, TECHNIQUE_RESOURCES
+from techniques_data import (
+    TECHNIQUE_DOCS, TECHNIQUE_REFS, TECHNIQUE_RESOURCES,
+    TECHNIQUE_FAMILIES as FAMILIES, FAMILY_LABELS,
+)
 
 BASE_DIR = os.path.abspath(os.path.dirname(__file__))
 DOCS_DIR = os.path.join(BASE_DIR, "docs")
@@ -27,21 +30,6 @@ DOCS_DIR = os.path.join(BASE_DIR, "docs")
 PLACEHOLDER_RE = re.compile(r"\{([A-Z0-9_]+)\}")
 REPO_URL = "https://github.com/cchopin/PromptLab"
 STATUSES = ["untested", "success", "partial", "fail"]
-
-# Regroupement des techniques par grande famille (pour la navigation).
-FAMILIES = [
-    ("direct", ["override", "leak", "role_switch", "jailbreak", "narration",
-                "few_shot", "prefix_injection", "refusal_suppression", "encoding",
-                "partial_exfil", "filter_bypass", "adversarial_suffix",
-                "chain_combo", "exfil_render"]),
-    ("indirect", ["indirect_html", "indirect_csv", "indirect_email", "multimodal"]),
-    ("agentic", ["tool_misuse", "agent_hijack", "memory_poisoning"]),
-]
-FAMILY_LABELS = {
-    "direct": {"fr": "Directes", "en": "Direct"},
-    "indirect": {"fr": "Indirectes", "en": "Indirect"},
-    "agentic": {"fr": "Agentiques", "en": "Agentic"},
-}
 
 
 def load_payloads():
