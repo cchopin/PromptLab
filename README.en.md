@@ -55,6 +55,28 @@ bar (the choice is stored in a cookie).
 
 ![Campaign detail](docs/img/campaign.png)
 
+## Online cheatsheet
+
+The cheatsheet (https://cchopin.github.io/PromptLab/) is a self-contained static
+page, no install, listing all payloads grouped by technique and by family
+(Direct / Indirect / Agentic). It is generated from the same data as the app via
+`python build_cheatsheet.py` (two pages: `index.html` in English, `index.fr.html`
+in French).
+
+What it offers:
+
+- Family navigation in the left column, search and filters (technique, objective,
+  type), collapsible categories (Expand all / Collapse all).
+- Placeholder filler: type a value for `{ACTION}`, `{SECRET}`, etc., and it is
+  substituted live in every payload and copy.
+- Per-target notes: set a target at the top, then on each payload a status button
+  (untested, success, partial, fail) and a notes box. Everything is saved in your
+  browser (localStorage), scoped to the target.
+- Markdown export of your notes for write-ups.
+
+No backend, ideal for working on labs without running the server. After adding
+payloads to the seed, regenerate with `python build_cheatsheet.py`.
+
 ## Overview
 
 1. Create a target with its connector and endpoint.

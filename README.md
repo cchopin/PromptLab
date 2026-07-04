@@ -50,6 +50,28 @@ Le script est idempotent : le relancer n'insère pas de doublons.
 
 ![Détail d'une campagne](docs/img/campaign.png)
 
+## Cheatsheet en ligne
+
+La cheatsheet (https://cchopin.github.io/PromptLab/) est une page statique
+autonome, sans installation, qui liste tous les payloads groupés par technique et
+par grande famille (Directes / Indirectes / Agentiques). Elle est générée depuis
+les mêmes données que l'app via `python build_cheatsheet.py` (deux pages :
+`index.html` en anglais, `index.fr.html` en français).
+
+Ce qu'elle propose :
+
+- Navigation par famille dans la colonne de gauche, recherche et filtres
+  (technique, objectif, type), catégories repliables (Tout ouvrir / Tout fermer).
+- Remplisseur de placeholders : saisis une valeur pour `{ACTION}`, `{SECRET}`,
+  etc., et elle se substitue en direct dans tous les payloads et les copies.
+- Prise de notes par cible : renseigne une cible en haut, puis sur chaque payload
+  un bouton de statut (à tester, succès, partiel, échec) et une zone de notes.
+  Tout est enregistré dans ton navigateur (localStorage), rattaché à la cible.
+- Export des notes en Markdown pour tes write-ups.
+
+Aucun backend, idéal pour bosser sur les labs sans lancer le serveur. Après avoir
+ajouté des payloads au seed, régénère avec `python build_cheatsheet.py`.
+
 ## Fonctionnement général
 
 1. Créer une cible (Target) avec son connecteur et son endpoint.
