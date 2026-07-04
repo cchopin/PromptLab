@@ -2,6 +2,9 @@
 
 Langue : Francais | [English](README.en.md)
 
+[![Release](https://img.shields.io/github/v/release/cchopin/PromptLab)](https://github.com/cchopin/PromptLab/releases)
+[Cheatsheet en ligne](https://cchopin.github.io/PromptLab/) · [Releases](https://github.com/cchopin/PromptLab/releases)
+
 Workbench de red teaming pour tester, documenter et reproduire des injections
 de prompt contre des LLM. Concu pour le parcours HTB AI Red Teamer (COAE) et
 reutilisable pour auditer les LLM d'entreprise.
