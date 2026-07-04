@@ -299,6 +299,9 @@ TECHNIQUE_RESOURCES = [
     ("Prompt-Hacking-Resources", "https://github.com/PromptLabs/Prompt-Hacking-Resources"),
     ("L1B3RT4S (jailbreaks)", "https://github.com/elder-plinius/L1B3RT4S"),
     ("CL4R1T4S (leaked system prompts)", "https://github.com/elder-plinius/CL4R1T4S"),
+    ("garak (auto scanner)", "https://github.com/NVIDIA/garak"),
+    ("PyRIT (auto red teaming)", "https://github.com/Azure/PyRIT"),
+    ("EasyJailbreak (attack framework)", "https://github.com/EasyJailbreak/EasyJailbreak"),
 ]
 
 # Regroupement des techniques par grande famille (nav app + cheatsheet).
