@@ -304,6 +304,8 @@ TECHNIQUE_RESOURCES = [
     ("EasyJailbreak (attack framework)", "https://github.com/EasyJailbreak/EasyJailbreak"),
     ("ChatGPT_DAN (DAN collection)", "https://github.com/0xk1h0/ChatGPT_DAN"),
     ("In-the-wild jailbreak prompts (study)", "https://arxiv.org/pdf/2308.03825"),
+    ("Token smuggling (paper)", "https://arxiv.org/pdf/2302.05733"),
+    ("Infinitely Many Meanings (paper)", "https://arxiv.org/pdf/2501.10800v1"),
 ]
 
 # Regroupement des techniques par grande famille (nav app + cheatsheet).
