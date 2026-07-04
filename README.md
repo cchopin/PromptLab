@@ -9,6 +9,8 @@ reutilisable pour auditer les LLM d'entreprise.
 Outil local, mono-utilisateur, sans authentification. A n'utiliser que contre
 des systemes que vous etes autorise a tester.
 
+Cheatsheet en ligne (sans installation) : https://cchopin.github.io/PromptLab/
+
 ## Installation
 
 macOS et beaucoup de distributions Linux gerent Python en mode "externally

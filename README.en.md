@@ -9,6 +9,8 @@ enterprise LLMs.
 Local, single user tool, no authentication. Use it only against systems you are
 authorized to test.
 
+Online cheatsheet (no install): https://cchopin.github.io/PromptLab/
+
 ## Installation
 
 macOS and many Linux distributions manage Python as "externally managed"

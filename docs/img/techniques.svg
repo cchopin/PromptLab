@@ -7,6 +7,9 @@
   <text x="130" y="28" font-size="12" fill="#8a94b8">Dashboard</text>
   <text x="210" y="28" font-size="12" fill="#8a94b8">Payloads</text>
   <text x="285" y="28" font-size="12" font-weight="bold" fill="#e0e0e0">Techniques</text>
+  <text x="372" y="28" font-size="12" fill="#8a94b8">Diff</text>
+  <text x="410" y="28" font-size="12" fill="#8a94b8">Targets</text>
+  <text x="472" y="28" font-size="12" fill="#8a94b8">New campaign</text>
   <text x="925" y="28" font-size="12" fill="#8a94b8">FR /</text>
   <text x="960" y="28" font-size="12" font-weight="bold" fill="#e94560">EN</text>
 

@@ -4,11 +4,12 @@
   <rect width="1000" height="44" fill="#16213a"/>
   <line x1="0" y1="44" x2="1000" y2="44" stroke="#26355c" stroke-width="1"/>
   <text x="24" y="28" font-size="16" font-weight="bold" fill="#e0e0e0">Prompt<tspan fill="#e94560">Lab</tspan></text>
-  <text x="130" y="28" font-size="12" fill="#8a94b8">Dashboard</text>
+  <text x="130" y="28" font-size="12" font-weight="bold" fill="#e0e0e0">Dashboard</text>
   <text x="210" y="28" font-size="12" fill="#8a94b8">Payloads</text>
   <text x="285" y="28" font-size="12" fill="#8a94b8">Techniques</text>
-  <text x="370" y="28" font-size="12" fill="#8a94b8">New campaign</text>
-  <text x="475" y="28" font-size="12" fill="#8a94b8">New target</text>
+  <text x="372" y="28" font-size="12" fill="#8a94b8">Diff</text>
+  <text x="410" y="28" font-size="12" fill="#8a94b8">Targets</text>
+  <text x="472" y="28" font-size="12" fill="#8a94b8">New campaign</text>
   <text x="925" y="28" font-size="12" fill="#8a94b8">FR /</text>
   <text x="960" y="28" font-size="12" font-weight="bold" fill="#e94560">EN</text>
 

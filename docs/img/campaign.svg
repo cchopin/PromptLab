@@ -7,15 +7,22 @@
   <text x="130" y="28" font-size="12" fill="#8a94b8">Dashboard</text>
   <text x="210" y="28" font-size="12" fill="#8a94b8">Payloads</text>
   <text x="285" y="28" font-size="12" fill="#8a94b8">Techniques</text>
+  <text x="372" y="28" font-size="12" fill="#8a94b8">Diff</text>
+  <text x="410" y="28" font-size="12" fill="#8a94b8">Targets</text>
+  <text x="472" y="28" font-size="12" fill="#8a94b8">New campaign</text>
   <text x="925" y="28" font-size="12" fill="#8a94b8">FR /</text>
   <text x="960" y="28" font-size="12" font-weight="bold" fill="#e94560">EN</text>
 
   <!-- header -->
   <text x="40" y="86" font-size="21" font-weight="bold" fill="#e0e0e0">Power Supply assessment</text>
-  <rect x="812" y="68" width="34" height="26" rx="4" fill="#0f3460" stroke="#26355c"/>
-  <text x="829" y="86" font-size="14" fill="#e0e0e0" text-anchor="middle">&#9998;</text>
-  <rect x="854" y="68" width="76" height="26" rx="4" fill="#0f3460" stroke="#26355c"/>
-  <text x="892" y="85" font-size="11" fill="#e0e0e0" text-anchor="middle">Export MD</text>
+  <rect x="636" y="68" width="30" height="26" rx="4" fill="#0f3460" stroke="#26355c"/>
+  <text x="651" y="86" font-size="14" fill="#e0e0e0" text-anchor="middle">&#9998;</text>
+  <rect x="672" y="68" width="86" height="26" rx="4" fill="#0f3460" stroke="#26355c"/>
+  <text x="715" y="85" font-size="11" fill="#e0e0e0" text-anchor="middle">Fingerprint</text>
+  <rect x="764" y="68" width="80" height="26" rx="4" fill="#0f3460" stroke="#26355c"/>
+  <text x="804" y="85" font-size="11" fill="#e0e0e0" text-anchor="middle">Export MD</text>
+  <rect x="850" y="68" width="110" height="26" rx="4" fill="#e94560"/>
+  <text x="905" y="85" font-size="11" font-weight="bold" fill="#12030a" text-anchor="middle">New chain</text>
   <text x="40" y="108" font-size="12" fill="#8a94b8">Target: Ministry of Power Supply (HTB)  |  Status: active</text>
 
   <!-- stat cards -->
