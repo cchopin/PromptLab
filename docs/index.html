@@ -3,9 +3,9 @@
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <title>PromptLab // Prompt injection cheatsheet</title>
 <style>
-:root{--bg:#0c0d10;--bg-alt:#14161b;--panel:#1b1e25;--accent:#9aafce;--text:#f1f3f7;--muted:#b0b6c2;--ok:#a6c0a2;--warn:#cc9a76;--err:#cf8a82;--border:#2a2e37;--mono:"SFMono-Regular","Consolas","Menlo","Monaco",monospace;}
+:root{--bg:#0c0d10;--bg-alt:#14161b;--panel:#1b1e25;--accent:#9aafce;--text:#f1f3f7;--muted:#b0b6c2;--ok:#a6c0a2;--warn:#cc9a76;--err:#cf8a82;--border:#2a2e37;--sans:-apple-system,system-ui,"Segoe UI",Roboto,Helvetica,Arial,sans-serif;--mono:"SFMono-Regular","Consolas","Menlo","Monaco",monospace;}
 *{box-sizing:border-box;}
-body{margin:0;background:var(--bg);color:var(--text);font-family:var(--mono);font-size:14px;line-height:1.5;}
+body{margin:0;background:var(--bg);color:var(--text);font-family:var(--sans);font-size:14px;line-height:1.5;}
 a{color:var(--accent);text-decoration:none;}a:hover{text-decoration:underline;}
 .topbar{display:flex;align-items:center;gap:18px;padding:12px 24px;background:var(--bg-alt);border-bottom:1px solid var(--border);position:sticky;top:0;z-index:20;flex-wrap:wrap;}
 .brand{font-size:16px;font-weight:bold;color:var(--text);}.brand span{color:var(--accent);}
@@ -29,11 +29,11 @@ h1{font-size:20px;}h2{font-size:16px;margin:0;display:inline;}
 .target-bar label,.ph-grid label,.controls label{display:block;font-size:11px;color:var(--muted);text-transform:uppercase;margin-bottom:4px;}
 .ph-grid{display:flex;gap:12px;flex-wrap:wrap;margin-top:10px;}
 .controls{display:flex;gap:12px;flex-wrap:wrap;align-items:flex-end;position:sticky;top:53px;background:var(--bg);padding:12px 0;z-index:10;}
-input,select,textarea{background:var(--bg-alt);color:var(--text);border:1px solid var(--border);border-radius:4px;padding:8px 10px;font-family:var(--mono);font-size:13px;}
+input,select,textarea{background:var(--bg-alt);color:var(--text);border:1px solid var(--border);border-radius:4px;padding:8px 10px;font-family:var(--sans);font-size:13px;}
 input#search{min-width:220px;flex:1;}input#target-input{min-width:240px;}
 .count{color:var(--muted);font-size:12px;}
 .count-line{margin:2px 0 4px;font-size:12px;}
-.btn{background:var(--panel);color:var(--text);border:1px solid var(--border);border-radius:4px;padding:5px 11px;cursor:pointer;font-family:var(--mono);font-size:12px;}
+.btn{background:var(--panel);color:var(--text);border:1px solid var(--border);border-radius:4px;padding:5px 11px;cursor:pointer;font-family:var(--sans);font-size:12px;}
 .btn:hover{background:#14417a;}
 .stack-btns{display:flex;flex-direction:column;gap:6px;}
 .stack-btns .btn{white-space:nowrap;text-align:center;}
@@ -50,11 +50,11 @@ input#search{min-width:220px;flex:1;}input#target-input{min-width:240px;}
 .pl-top .actions{display:flex;gap:6px;align-items:center;flex-wrap:wrap;}
 .badge{display:inline-block;padding:2px 8px;border-radius:3px;font-size:11px;border:1px solid var(--border);}
 .b-obj{background:#241f2e;}.b-type{background:#1c2530;}
-.status-btn{cursor:pointer;border:1px solid var(--border);border-radius:4px;padding:2px 9px;font-size:11px;background:var(--bg);color:var(--muted);font-family:var(--mono);}
+.status-btn{cursor:pointer;border:1px solid var(--border);border-radius:4px;padding:2px 9px;font-size:11px;background:var(--bg);color:var(--muted);font-family:var(--sans);}
 .status-btn.st-success{color:var(--ok);border-color:var(--ok);}
 .status-btn.st-partial{color:var(--warn);border-color:var(--warn);}
 .status-btn.st-fail{color:var(--err);border-color:var(--err);}
-.pl-body{background:#090a0d;border:1px solid var(--border);border-radius:4px;padding:10px;white-space:pre-wrap;word-break:break-word;margin-top:8px;font-size:13px;color:#d7dbe3;}
+.pl-body{background:#090a0d;border:1px solid var(--border);border-radius:4px;padding:10px;white-space:pre-wrap;word-break:break-word;margin-top:8px;font-size:13px;color:#d7dbe3;font-family:var(--mono);}
 .pl-notes{width:100%;margin-top:8px;min-height:34px;resize:vertical;}
 .hidden{display:none;}
 footer{text-align:center;color:var(--muted);font-size:12px;padding:24px;}
