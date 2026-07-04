@@ -124,6 +124,7 @@ h1{font-size:20px;}h2{font-size:16px;margin:0;display:inline;}
 input,select,textarea{background:var(--bg-alt);color:var(--text);border:1px solid var(--border);border-radius:4px;padding:8px 10px;font-family:var(--mono);font-size:13px;}
 input#search{min-width:220px;flex:1;}input#target-input{min-width:240px;}
 .count{color:var(--muted);font-size:12px;}
+.count-line{margin:2px 0 4px;font-size:12px;}
 .btn{background:var(--panel);color:var(--text);border:1px solid var(--border);border-radius:4px;padding:5px 11px;cursor:pointer;font-family:var(--mono);font-size:12px;}
 .btn:hover{background:#14417a;}
 .stack-btns{display:flex;flex-direction:column;gap:6px;}
@@ -305,9 +306,9 @@ def render(lang, payloads):
                % (esc(u["f_type"]), esc(u["all"]), option_list(types)))
     out.append('<div class="stack-btns"><button class="btn" id="expand-all">%s</button><button class="btn" id="collapse-all">%s</button></div>'
                % (esc(u["expand_all"]), esc(u["collapse_all"])))
-    out.append('<span class="count" id="count" data-one="%s" data-many="%s"></span>'
-               % (esc(u["count_one"]), esc(u["count_many"])))
     out.append("</div>")
+    out.append('<div class="count-line"><span class="count" id="count" data-one="%s" data-many="%s"></span></div>'
+               % (esc(u["count_one"]), esc(u["count_many"])))
 
     # sections par technique
     for tech in techniques:
