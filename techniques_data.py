@@ -283,7 +283,7 @@ TECHNIQUE_REFS = {
     "tool_misuse": _PS + "#exploiting-llm-apis-functions-and-plugins",
     "exfil_render": _PS + "#insecure-output-handling",
     "chain_combo": _PS + "#chaining-vulnerabilities-in-llm-apis",
-    "adversarial_suffix": "https://arxiv.org/abs/2404.07921",
+    "adversarial_suffix": "https://arxiv.org/pdf/2307.15043",
     "multimodal": _OWASP01,
     "memory_poisoning": "https://arxiv.org/pdf/2504.03957",
     "agent_hijack": "https://atlas.mitre.org/",
@@ -302,6 +302,8 @@ TECHNIQUE_RESOURCES = [
     ("garak (auto scanner)", "https://github.com/NVIDIA/garak"),
     ("PyRIT (auto red teaming)", "https://github.com/Azure/PyRIT"),
     ("EasyJailbreak (attack framework)", "https://github.com/EasyJailbreak/EasyJailbreak"),
+    ("ChatGPT_DAN (DAN collection)", "https://github.com/0xk1h0/ChatGPT_DAN"),
+    ("In-the-wild jailbreak prompts (study)", "https://arxiv.org/pdf/2308.03825"),
 ]
 
 # Regroupement des techniques par grande famille (nav app + cheatsheet).
