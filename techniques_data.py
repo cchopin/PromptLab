@@ -244,4 +244,7 @@ TECHNIQUE_RESOURCES = [
     ("PortSwigger Web LLM attacks", _PS),
     ("PayloadsAllTheThings Prompt Injection", "https://github.com/swisskyrepo/PayloadsAllTheThings/tree/master/Prompt%20Injection"),
     ("HackTricks AI", "https://ai.hacktricks.wiki/"),
+    ("Prompt-Hacking-Resources", "https://github.com/PromptLabs/Prompt-Hacking-Resources"),
+    ("L1B3RT4S (jailbreaks)", "https://github.com/elder-plinius/L1B3RT4S"),
+    ("CL4R1T4S (leaked system prompts)", "https://github.com/elder-plinius/CL4R1T4S"),
 ]
